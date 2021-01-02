@@ -10,6 +10,8 @@ common common-options
     , GeneralizedNewtypeDeriving
     , NumericUnderscores
     , RecordWildCards
+    , DuplicateRecordFields
+    , TemplateHaskell
   ghc-options:        -Wall
                       -Wno-type-defaults
                       -fwrite-ide-info
@@ -22,22 +24,27 @@ common common-depends
     -- Data
     , extra
     , text
+    , bytestring
     , lens
     , containers
     , unordered-containers
     -- Trans
     , mtl
     , transformers
-    -- Parsing
-    , megaparsec
     -- Util
     , prettyprinter
 
 library
   import:           common-options, common-depends
   exposed-modules:
+      Data.ID3.Tag
+    , Data.ID3.Parse
   other-modules:
   hs-source-dirs:     lib
+  build-depends:
+    -- Parsing
+    , megaparsec
+    , parser-combinators
 
 test-suite lib
   import:             common-options, common-depends
