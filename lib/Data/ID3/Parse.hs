@@ -7,7 +7,7 @@ import qualified Data.ByteString as BS
 import Control.Lens.Getter
 import Control.Lens.TH
 import Control.Monad.Combinators
-import Text.Megaparsec
+import Text.Megaparsec hiding (State)
 import Text.Megaparsec.Byte
 import Text.Megaparsec.Byte.Lexer
 import Data.ID3.Tag
@@ -18,10 +18,10 @@ data ParserOpts = ParserOpts
   }
 makeLenses ''ParserOpts
 
-type Parser = ParsecT Void BS.ByteString (P.State ParserOpts) -- Add state
+type Parser = ParsecT Void BS.ByteString (State ParserOpts) -- Add state
 
 runTagParser :: Parser a -> BS.ByteString -> Either (ParseErrorBundle BS.ByteString Void) a
-runTagParser p s = evalState (runParserT p "<file>" s) (ParserOpts {  _encoder = E.encodeUtf8, _decoder = E.decodeUtf8 })
+runTagParser p s = evalState (runParserT p "<file>" s) (ParserOpts E.encodeUtf8 E.decodeUtf8)
 
 w8toC :: Word8 -> Char 
 w8toC = chr . fromEnum
@@ -51,7 +51,7 @@ parseID3v1Tag = do
   genre <- anySingle 
   return $ ID3v1Tag title artist album year comment track genre
 
-_parseID3v1ETag :: Parser ID3v1ETag
+_parseID3v1ETag :: Parser (T.Text -> T.Text -> Maybe Word8 -> ID3v1ETag)
 _parseID3v1ETag = do
   encode <- use encoder
   _ <- string $ encode "TAG+"
@@ -69,4 +69,30 @@ _parseID3v1ETag = do
     return $ (minutes, seconds)
   return $ ID3v1ETag title artist album speed genre start_time end_time
 
--- parseID3v1ETag = combine E + v1 tag
+parseID3v1ETag :: Parser ID3v1ETag
+parseID3v1ETag = do
+  tag <- _parseID3v1ETag
+  v11 <- parseID3v1Tag
+  return $ tag (v11^.year) (v11^.comment) (v11^.track)
+
+_parseID3v12Tag :: Parser (T.Text, T.Text, T.Text, T.Text, T.Text)
+_parseID3v12Tag = do
+  encode <- use encoder
+  _ <- string $ encode "EXT"
+  title <- parseTextField 30 <?> "title"
+  artist <- parseTextField 30 <?> "artist"
+  album <- parseTextField 30 <?> "album"
+  comment <- parseTextField 15 <?> "comment"
+  subgenre <- parseTextField 20 <?> "subgenre"
+  return $ (title, artist, album, comment, subgenre)
+
+parseID3v12Tag :: Parser ID3v12Tag
+parseID3v12Tag = do
+  (_title, _artist, _album, _comment, subgenre) <- _parseID3v12Tag
+  v11 <- parseID3v1Tag
+  return $ ID3v12Tag
+    ((v11^.title) `T.append` _title)
+    ((v11^.artist) `T.append` _artist)
+    ((v11^.album) `T.append` _album)
+    ((v11^.comment) `T.append` _comment)
+    subgenre (v11^.year) (v11^.track) (v11^.genre)

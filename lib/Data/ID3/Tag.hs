@@ -17,13 +17,13 @@ data ID3Ver
 -- v1.0 and v1.1
 
 data ID3v1Tag = ID3v1Tag
-  { _title :: T.Text
-  , _artist :: T.Text 
-  , _album :: T.Text
-  , _year :: T.Text
-  , _comment :: T.Text
-  , _track :: Maybe Word8
-  , _genre :: Word8 -- Do custom Type
+  { _iD3v1TagTitle :: T.Text
+  , _iD3v1TagArtist :: T.Text 
+  , _iD3v1TagAlbum :: T.Text
+  , _iD3v1TagYear :: T.Text
+  , _iD3v1TagComment :: T.Text
+  , _iD3v1TagTrack :: Maybe Word8
+  , _iD3v1TagGenre :: Word8 -- Do custom Type
   }
   deriving (Eq, Show)
 makeFields ''ID3v1Tag
@@ -32,13 +32,34 @@ makeFields ''ID3v1Tag
 -- Enhanced tag
 
 data ID3v1ETag = ID3v1ETag
-  { _title :: T.Text
-  , _artist :: T.Text
-  , _album :: T.Text
-  , _speed :: Word8
-  , _genre :: T.Text
-  , _start_time :: (Int, Int)
-  , _end_time :: (Int, Int)
+  { _iD3v1ETagTitle :: T.Text
+  , _iD3v1ETagArtist :: T.Text
+  , _iD3v1ETagAlbum :: T.Text
+  , _iD3v1ETagSpeed :: Word8
+  , _iD3v1ETagGenre :: T.Text
+  , _iD3v1ETagStart_time :: (Int, Int)
+  , _iD3v1ETagEnd_time :: (Int, Int)
+  -- From 1.1
+  , _iD3v1ETagYear :: T.Text
+  , _iD3v1ETagComment :: T.Text
+  , _iD3v1ETagTrack :: Maybe Word8
   }
   deriving (Eq, Show)
 makeFields ''ID3v1ETag
+
+
+-- v1.2 tag
+
+data ID3v12Tag = ID3v12Tag
+  { _iD3v12TagTitle :: T.Text
+  , _iD3v12TagArtist :: T.Text
+  , _iD3v12TagAlbum :: T.Text
+  , _iD3v12TagComment :: T.Text
+  , _iD3v12TagSubgenre :: T.Text
+  -- From 1.1
+  , _iD3v12TagYear :: T.Text
+  , _iD3v12TagTrack :: Maybe Word8
+  , _iD3v12TagGenre :: Word8 -- Do custom Type
+  }
+  deriving (Eq, Show)
+makeFields ''ID3v12Tag
