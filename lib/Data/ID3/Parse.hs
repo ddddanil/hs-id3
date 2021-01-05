@@ -11,6 +11,7 @@ import Text.Megaparsec hiding (State)
 import Text.Megaparsec.Byte
 import Text.Megaparsec.Byte.Lexer
 import Data.ID3.Tag
+import Data.ID3.Genre hiding (genre)
 
 data ParserOpts = ParserOpts
   { _encoder :: T.Text -> BS.ByteString 
@@ -32,6 +33,12 @@ parseTextField size = do
   text <- decode <$> takeP Nothing size
   return $ T.takeWhile (\c -> c /= chr 0) text
 
+parseGenre :: Parser Genre
+parseGenre = do
+  g <- anySingle
+  guard (g <= 191) <?> "valid genre byte"
+  return $ Genre g
+
 parseID3v1Tag :: Parser ID3v1Tag 
 parseID3v1Tag = do
   encode <- use encoder
@@ -43,12 +50,12 @@ parseID3v1Tag = do
   (comment, track) <- do
     comment <- parseTextField 28 <?> "comment"
     choice [ do { _zbyte <- try $ char 0;
-                  genre <- anySingle;
-                  return (comment, Just genre)
+                  track <- anySingle;
+                  return (comment, Just track)
           }, do { cont <- parseTextField 2 <?> "comment";
                   return (comment `T.append` cont, Nothing)
           }]
-  genre <- anySingle 
+  genre <- parseGenre 
   return $ ID3v1Tag title artist album year comment track genre
 
 _parseID3v1ETag :: Parser (T.Text -> T.Text -> Maybe Word8 -> ID3v1ETag)

@@ -9,9 +9,11 @@ common common-options
     , OverloadedStrings
     , GeneralizedNewtypeDeriving
     , FlexibleInstances
+    , FlexibleContexts
     , MultiParamTypeClasses
     , FunctionalDependencies
     , NumericUnderscores
+    , LambdaCase
     , RecordWildCards
     , DuplicateRecordFields
     , TemplateHaskell
@@ -42,6 +44,7 @@ library
   exposed-modules:
       Data.ID3.Tag
     , Data.ID3.Parse
+    , Data.ID3.Genre
   other-modules:
   hs-source-dirs:     lib
   build-depends:

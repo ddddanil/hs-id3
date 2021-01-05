@@ -2,7 +2,11 @@ module Data.ID3.Tag where
 
 import Protolude
 import qualified Data.Text as T
+import Control.Lens.Getter
 import Control.Lens.TH
+import Data.Text.Prettyprint.Doc
+
+import Data.ID3.Genre
 
 -- | ID3 Supported versions
 data ID3Ver
@@ -23,10 +27,15 @@ data ID3v1Tag = ID3v1Tag
   , _iD3v1TagYear :: T.Text
   , _iD3v1TagComment :: T.Text
   , _iD3v1TagTrack :: Maybe Word8
-  , _iD3v1TagGenre :: Word8 -- Do custom Type
+  , _iD3v1TagGenre :: Genre -- Do custom Type
   }
   deriving (Eq, Show)
 makeFields ''ID3v1Tag
+
+isv11 :: ID3v1Tag -> Bool
+isv11 tag = isJust (tag^.track)
+
+-- TODO instance pretty tag
 
 
 -- Enhanced tag
@@ -59,7 +68,7 @@ data ID3v12Tag = ID3v12Tag
   -- From 1.1
   , _iD3v12TagYear :: T.Text
   , _iD3v12TagTrack :: Maybe Word8
-  , _iD3v12TagGenre :: Word8 -- Do custom Type
+  , _iD3v12TagGenre :: Genre -- Do custom Type
   }
   deriving (Eq, Show)
 makeFields ''ID3v12Tag
