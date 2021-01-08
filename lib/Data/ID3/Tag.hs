@@ -10,12 +10,8 @@ import Data.ID3.Genre
 
 -- | ID3 Supported versions
 data ID3Ver
-  = ID3v1  -- ^ v1 and v1.1
-  | ID3v1E -- ^ unofficial Enhanced TAG
-  | ID3v12 -- ^ v1.2
-  | ID3v22 -- ^ v2.2
-  | ID3v23 -- ^ v2.3
-  | ID3v24 -- ^ v2.4
+  = ID3v1 { is_v11 :: Bool, is_Enh :: Bool, is_v12 :: Bool }
+  | ID3v2 { major :: Int, minor :: Int }
 
 
 -- v1.0 and v1.1
