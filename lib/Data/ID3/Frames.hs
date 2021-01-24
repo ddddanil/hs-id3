@@ -57,6 +57,7 @@ data Frame
   | BinaryFrame
     { _binaryFrameData :: BS.ByteString 
     }
+-- TODO add frames
   deriving (Eq, Show)
 makeFields ''Frame
 makePrisms ''Frame
