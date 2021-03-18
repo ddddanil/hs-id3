@@ -35,6 +35,9 @@ pByte = do
   buf_pos -= 1
   return byte
 
+traceBufPos :: Parser ()
+traceBufPos = traceShowM =<< use buf_pos
+
 parseTextField :: Int -> Parser T.Text
 parseTextField size = do
   decode <- use decoder
@@ -57,9 +60,10 @@ parseID3v1Tag = do
   artist <- parseTextField 30 <?> "artist"
   album <- parseTextField 30 <?> "album"
   year <- T.pack <$> replicateM 4 (w8toC <$> digitChar)
+  buf_pos -= 4
   (comment, track) <- do
     comment <- parseTextField 28 <?> "comment"
-    choice [ do { _zbyte <- try $ char 0;
+    choice [ do { _zbyte <- try $ char 0 >> buf_pos -= 1;
                   track <- pByte;
                   return (comment, Just track)
           }, do { cont <- parseTextField 2 <?> "comment";

@@ -13,6 +13,7 @@ common common-options
     , MultiParamTypeClasses
     , FunctionalDependencies
     , NumericUnderscores
+    , BangPatterns
     , LambdaCase
     , RecordWildCards
     , DuplicateRecordFields
@@ -34,7 +35,6 @@ common common-depends
     , containers
     , unordered-containers
     -- Trans
-    , mtl
     , transformers
     -- Util
     , prettyprinter
@@ -45,17 +45,19 @@ library
       Data.ID3.Tag
     , Data.ID3.Parse
     , Data.ID3.Genre
+    , Data.ID3.IO
   other-modules:
   hs-source-dirs:     lib
   build-depends:
     -- Parsing
-    , megaparsec
+      megaparsec
     , parser-combinators
 
 test-suite lib
   import:             common-options, common-depends
   main-is:            Main.hs
   other-modules:
+    V1Suite
   hs-source-dirs:     test
   type:               exitcode-stdio-1.0
   build-depends:
@@ -64,3 +66,10 @@ test-suite lib
     , tasty
     , tasty-hunit
     , tasty-expected-failure
+    -- Download tests
+    , tar
+    , zlib
+    , req
+    -- Manage test resources
+    , directory
+    , path
