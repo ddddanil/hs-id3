@@ -1,4 +1,13 @@
-# https://github.com/github/gitignore/blob/master/Haskell.gitignore
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+.idea/libraries
+*.iml
+out
+gen
+### Haskell template
 dist
 dist-*
 cabal-dev
@@ -22,3 +31,4 @@ cabal.project.local
 cabal.project.local~
 .HTF/
 .ghc.environment.*
+

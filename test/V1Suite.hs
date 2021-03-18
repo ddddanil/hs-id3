@@ -22,6 +22,8 @@ testV1Suite = testGroup "id3v1 Suite"
   [ testCase "test2" $ return ()
   ]
 
+
+
 -- List files
 
 fileList :: IO [FilePath]
@@ -40,7 +42,6 @@ suitePath = "id3v1_test_suite"
 download :: IO LBS.ByteString
 download = do
 -- https://id3.org/Developer%20Information?action=AttachFile&do=get&target=id3v1_test_suite.tar.gz
-  print "Downloading id3v1 test suite"
   runReq defaultHttpConfig $
     responseBody <$> req
       GET (https "id3.org" /: "Developer Information")
@@ -57,13 +58,14 @@ writeTestEntry entry =
   case Tar.entryContent entry of
     Tar.NormalFile contents _size -> do
       name <- P.fromRelFile . P.filename <$> (P.parseRelFile . Tar.entryPath $ entry)
-      when (".mp3" `L.isInfixOf` name) $
+      when (".mp3" `L.isInfixOf` name) $ do
+        putStrLn $ "\tExtracting \"" ++ name ++ "\""
         LBS.writeFile name contents
     _ -> return ()
 
 extract :: LBS.ByteString -> IO ()
 extract archive= do
-  print "Extracting id3v1 test suite"
+  putText "\tDecompressing gzip archive"
   entries <- extractEntries . Tar.read . GZip.decompress $ archive
   Dir.withCurrentDirectory suitePath $
     mapM_ writeTestEntry entries
@@ -74,4 +76,8 @@ getSuite =
     exists <- Dir.doesDirectoryExist suitePath
     unless exists $ do
       Dir.createDirectory suitePath
-      download >>= extract
+      putText "==> Downloading id3v1 test suite"
+      archive <- download
+      putStrLn $ "\tDownloaded [" ++ show (LBS.length archive `div` 1024) ++ " kB]"
+      putText "==> Extracting id3v1 test suite"
+      extract archive

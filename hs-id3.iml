@@ -8,6 +8,8 @@
       <excludeFolder url="file://$MODULE_DIR$/.stack-work" />
       <excludeFolder url="file://$MODULE_DIR$/.hie" />
       <excludeFolder url="file://$MODULE_DIR$/.vscode" />
+      <excludeFolder url="file://$MODULE_DIR$/test/id3v1_test_suite" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/libraries" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
