@@ -6,6 +6,7 @@ module V1Suite
   where
 
 import Protolude
+import qualified Data.Text as T
 import qualified Data.List as L
 import qualified Data.ByteString.Lazy as LBS
 import qualified Codec.Archive.Tar as Tar
@@ -14,25 +15,39 @@ import qualified System.Directory as Dir
 import qualified Path as P
 import Network.HTTP.Req
 
+import Data.ID3.IO (readv1File)
+
 import Test.Tasty       (TestTree, testGroup)
-import Test.Tasty.HUnit (testCase)
+import Test.Tasty.HUnit (testCase, assertFailure)
 
-testV1Suite :: TestTree
-testV1Suite = testGroup "id3v1 Suite"
-  [ testCase "test2" $ return ()
-  ]
+testV1Suite :: IO TestTree
+testV1Suite =
+  Dir.withCurrentDirectory suitePath $ do
+    test_files <- Dir.listDirectory "."
+    print =<< Dir.getCurrentDirectory
+    print test_files
+    return . testGroup "id3v1 Suite" $
+      testFile <$> test_files
 
-
+testFile :: FilePath -> TestTree
+testFile filename =
+  testCase filename .
+  Dir.withCurrentDirectory suitePath $ do
+    let fail = "_F" `L.isInfixOf` filename
+    file <- openFile filename ReadMode
+    tag <- readv1File filename file
+    case tag of
+      Just _tag -> when fail $ assertFailure "Correct tag"
+      Nothing -> unless fail $ assertFailure "Incorrect tag"
 
 -- List files
 
 fileList :: IO [FilePath]
-fileList =
-  Dir.withCurrentDirectory "test" $ do
-    exists <- Dir.doesDirectoryExist suitePath
-    if exists
-      then Dir.listDirectory suitePath
-      else return []
+fileList = do
+  exists <- Dir.doesDirectoryExist suitePath
+  if exists
+    then Dir.listDirectory suitePath
+    else return []
 
 -- Download and extract suite
 
@@ -71,13 +86,12 @@ extract archive= do
     mapM_ writeTestEntry entries
 
 getSuite :: IO ()
-getSuite =
-  Dir.withCurrentDirectory "test" $ do
-    exists <- Dir.doesDirectoryExist suitePath
-    unless exists $ do
-      Dir.createDirectory suitePath
-      putText "==> Downloading id3v1 test suite"
-      archive <- download
-      putStrLn $ "\tDownloaded [" ++ show (LBS.length archive `div` 1024) ++ " kB]"
-      putText "==> Extracting id3v1 test suite"
-      extract archive
+getSuite = do
+  exists <- Dir.doesDirectoryExist suitePath
+  unless exists $ do
+    Dir.createDirectory suitePath
+    putText "==> Downloading id3v1 test suite"
+    archive <- download
+    putStrLn $ "\tDownloaded [" ++ show (LBS.length archive `div` 1024) ++ " kB]"
+    putText "==> Extracting id3v1 test suite"
+    extract archive

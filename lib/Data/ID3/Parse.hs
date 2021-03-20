@@ -23,8 +23,8 @@ makeLenses ''ParserOpts
 
 type Parser = ParsecT Void BS.ByteString (State ParserOpts) -- Add state
 
-runTagParser :: Parser a -> BS.ByteString -> Either (ParseErrorBundle BS.ByteString Void) a
-runTagParser p s = evalState (runParserT p "<file>" s) (ParserOpts E.encodeUtf8 E.decodeUtf8 0)
+runTagParser :: Parser a -> T.Text -> BS.ByteString -> Either (ParseErrorBundle BS.ByteString Void) a
+runTagParser p n s = evalState (runParserT p (T.unpack n) s) (ParserOpts E.encodeUtf8 E.decodeUtf8 0)
 
 w8toC :: Word8 -> Char 
 w8toC = chr . fromEnum
