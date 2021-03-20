@@ -5,13 +5,14 @@ module V1Suite
   )
   where
 
-import Protolude
+import Control.Exception 
 import qualified Data.Text as T
 import qualified Data.List as L
 import qualified Data.ByteString.Lazy as LBS
 import qualified Codec.Archive.Tar as Tar
 import qualified Codec.Compression.GZip as GZip
 import qualified System.Directory as Dir
+import System.IO (openBinaryFile)
 import qualified Path as P
 import Network.HTTP.Req
 
@@ -34,7 +35,7 @@ testFile filename =
   testCase filename .
   Dir.withCurrentDirectory suitePath $ do
     let fail = "_F" `L.isInfixOf` filename
-    file <- openFile filename ReadMode
+    file <- openBinaryFile filename ReadMode
     tag <- readv1File filename file
     case tag of
       Just _tag -> when fail $ assertFailure "Correct tag"
@@ -76,7 +77,7 @@ writeTestEntry entry =
       when (".mp3" `L.isInfixOf` name) $ do
         putStrLn $ "\tExtracting \"" ++ name ++ "\""
         LBS.writeFile name contents
-    _ -> return ()
+    _ -> pass
 
 extract :: LBS.ByteString -> IO ()
 extract archive= do

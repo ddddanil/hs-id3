@@ -1,6 +1,6 @@
 module Data.ID3.Frames where
 
-import Protolude
+import ClassyPrelude
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as E
 import qualified Data.ByteString as BS

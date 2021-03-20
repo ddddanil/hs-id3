@@ -5,8 +5,8 @@ version:       0.1
 common common-options
   default-language:   Haskell2010
   default-extensions:
-      NoImplicitPrelude
-    , OverloadedStrings
+--      NoImplicitPrelude
+      OverloadedStrings
     , GeneralizedNewtypeDeriving
     , FlexibleInstances
     , FlexibleContexts
@@ -22,18 +22,18 @@ common common-options
                       -Wno-type-defaults
                       -fwrite-ide-info
                       -hiedir=.hie
-  build-depends:      base
+  build-depends:      base, relude
+  mixins:   base hiding (Prelude)
+    , relude (Relude as Prelude)
+    , relude
 
 common common-depends
   build-depends:
-      protolude
     -- Data
-    , extra
-    , text
+      text
     , bytestring
+    , extra
     , lens
-    , containers
-    , unordered-containers
     -- Trans
     , transformers
     -- Util

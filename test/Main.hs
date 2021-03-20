@@ -1,6 +1,5 @@
 module Main where
 
-import Protolude
 import qualified System.Directory as Dir
 import Test.Tasty       (defaultMain, testGroup)
 import Test.Tasty.HUnit (testCase)

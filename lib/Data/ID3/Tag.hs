@@ -1,7 +1,5 @@
 module Data.ID3.Tag where
 
-import Protolude
-import qualified Data.Text as T
 import Control.Lens.Getter
 import Control.Lens.TH
 import Data.Text.Prettyprint.Doc
@@ -17,11 +15,11 @@ data ID3Ver
 -- v1.0 and v1.1
 
 data ID3v1Tag = ID3v1Tag
-  { _iD3v1TagTitle :: T.Text
-  , _iD3v1TagArtist :: T.Text 
-  , _iD3v1TagAlbum :: T.Text
-  , _iD3v1TagYear :: T.Text
-  , _iD3v1TagComment :: T.Text
+  { _iD3v1TagTitle :: Text
+  , _iD3v1TagArtist :: Text 
+  , _iD3v1TagAlbum :: Text
+  , _iD3v1TagYear :: Text
+  , _iD3v1TagComment :: Text
   , _iD3v1TagTrack :: Maybe Word8
   , _iD3v1TagGenre :: Genre -- Do custom Type
   }
@@ -37,16 +35,16 @@ isv11 tag = isJust (tag^.track)
 -- Enhanced tag
 
 data ID3v1ETag = ID3v1ETag
-  { _iD3v1ETagTitle :: T.Text
-  , _iD3v1ETagArtist :: T.Text
-  , _iD3v1ETagAlbum :: T.Text
+  { _iD3v1ETagTitle :: Text
+  , _iD3v1ETagArtist :: Text
+  , _iD3v1ETagAlbum :: Text
   , _iD3v1ETagSpeed :: Word8
-  , _iD3v1ETagGenre :: T.Text
+  , _iD3v1ETagGenre :: Text
   , _iD3v1ETagStart_time :: (Int, Int)
   , _iD3v1ETagEnd_time :: (Int, Int)
   -- From 1.1
-  , _iD3v1ETagYear :: T.Text
-  , _iD3v1ETagComment :: T.Text
+  , _iD3v1ETagYear :: Text
+  , _iD3v1ETagComment :: Text
   , _iD3v1ETagTrack :: Maybe Word8
   }
   deriving (Eq, Show)
@@ -56,13 +54,13 @@ makeFields ''ID3v1ETag
 -- v1.2 tag
 
 data ID3v12Tag = ID3v12Tag
-  { _iD3v12TagTitle :: T.Text
-  , _iD3v12TagArtist :: T.Text
-  , _iD3v12TagAlbum :: T.Text
-  , _iD3v12TagComment :: T.Text
-  , _iD3v12TagSubgenre :: T.Text
+  { _iD3v12TagTitle :: Text
+  , _iD3v12TagArtist :: Text
+  , _iD3v12TagAlbum :: Text
+  , _iD3v12TagComment :: Text
+  , _iD3v12TagSubgenre :: Text
   -- From 1.1
-  , _iD3v12TagYear :: T.Text
+  , _iD3v12TagYear :: Text
   , _iD3v12TagTrack :: Maybe Word8
   , _iD3v12TagGenre :: Genre -- Do custom Type
   }

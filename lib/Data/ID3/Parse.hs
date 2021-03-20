@@ -1,9 +1,6 @@
 module Data.ID3.Parse where
 
-import Protolude as P hiding (try)
 import qualified Data.Text as T
-import qualified Data.Text.Encoding as E
-import qualified Data.ByteString as BS
 import Control.Lens.Getter
 import Control.Lens.Setter
 import Control.Lens.TH
@@ -15,16 +12,16 @@ import Data.ID3.Tag
 import Data.ID3.Genre hiding (genre)
 
 data ParserOpts = ParserOpts
-  { _encoder :: T.Text -> BS.ByteString 
-  , _decoder :: BS.ByteString -> T.Text 
+  { _encoder :: Text -> ByteString
+  , _decoder :: ByteString -> Text
   , _buf_pos :: Int
   }
 makeLenses ''ParserOpts
 
-type Parser = ParsecT Void BS.ByteString (State ParserOpts) -- Add state
+type Parser = ParsecT Void ByteString (State ParserOpts) -- Add state
 
-runTagParser :: Parser a -> T.Text -> BS.ByteString -> Either (ParseErrorBundle BS.ByteString Void) a
-runTagParser p n s = evalState (runParserT p (T.unpack n) s) (ParserOpts E.encodeUtf8 E.decodeUtf8 0)
+runTagParser :: Parser a -> Text -> ByteString -> Either (ParseErrorBundle ByteString Void) a
+runTagParser p n s = evalState (runParserT p (toString n) s) (ParserOpts encodeUtf8 decodeUtf8 0)
 
 w8toC :: Word8 -> Char 
 w8toC = chr . fromEnum
@@ -38,7 +35,7 @@ pByte = do
 traceBufPos :: Parser ()
 traceBufPos = traceShowM =<< use buf_pos
 
-parseTextField :: Int -> Parser T.Text
+parseTextField :: Int -> Parser Text
 parseTextField size = do
   decode <- use decoder
   text <- decode <$> takeP Nothing size
@@ -59,7 +56,7 @@ parseID3v1Tag = do
   title <- parseTextField 30 <?> "title"
   artist <- parseTextField 30 <?> "artist"
   album <- parseTextField 30 <?> "album"
-  year <- T.pack <$> replicateM 4 (w8toC <$> digitChar)
+  year <- toText <$> replicateM 4 (w8toC <$> digitChar)
   buf_pos -= 4
   (comment, track) <- do
     comment <- parseTextField 28 <?> "comment"
@@ -73,7 +70,7 @@ parseID3v1Tag = do
   guard =<< uses buf_pos (== 0) <?> "wrong tag length"
   return $ ID3v1Tag title artist album year comment track genre
 
-_parseID3v1ETag :: Parser (T.Text -> T.Text -> Maybe Word8 -> ID3v1ETag)
+_parseID3v1ETag :: Parser (Text -> Text -> Maybe Word8 -> ID3v1ETag)
 _parseID3v1ETag = do
   encode <- use encoder
   _ <- string $ encode "TAG+"
@@ -100,7 +97,7 @@ parseID3v1ETag = do
   v11 <- parseID3v1Tag
   return $ tag (v11^.year) (v11^.comment) (v11^.track)
 
-_parseID3v12Tag :: Parser (T.Text, T.Text, T.Text, T.Text, T.Text)
+_parseID3v12Tag :: Parser (Text, Text, Text, Text, Text)
 _parseID3v12Tag = do
   encode <- use encoder
   _ <- string $ encode "EXT"

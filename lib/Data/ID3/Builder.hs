@@ -2,8 +2,7 @@ module Data.ID3.Builder (
   putID3v1Tag
 ) where
 
-import Protolude as P hiding (try, putText)
-import Protolude.Error (error)
+import ClassyPrelude
 import qualified Data.List as L
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as E
