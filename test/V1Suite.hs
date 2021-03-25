@@ -16,6 +16,7 @@ import System.IO (openBinaryFile)
 import qualified Path as P
 import Network.HTTP.Req
 
+import qualified Data.ID3.Tag
 import Data.ID3.IO (readv1File)
 
 import Test.Tasty       (TestTree, testGroup)
@@ -25,8 +26,6 @@ testV1Suite :: IO TestTree
 testV1Suite =
   Dir.withCurrentDirectory suitePath $ do
     test_files <- Dir.listDirectory "."
-    print =<< Dir.getCurrentDirectory
-    print test_files
     return . testGroup "id3v1 Suite" $
       testFile <$> test_files
 
@@ -38,7 +37,9 @@ testFile filename =
     file <- openBinaryFile filename ReadMode
     tag <- readv1File filename file
     case tag of
-      Just _tag -> when fail $ assertFailure "Correct tag"
+      Just _tag -> do
+        writeFileText (filename ++ ".tag") . toText . (show :: Data.ID3.Tag.ID3v1 -> Text) $ _tag
+        when fail $ assertFailure "Correct tag"
       Nothing -> unless fail $ assertFailure "Incorrect tag"
 
 -- List files
@@ -76,7 +77,7 @@ writeTestEntry entry =
       name <- P.fromRelFile . P.filename <$> (P.parseRelFile . Tar.entryPath $ entry)
       when (".mp3" `L.isInfixOf` name) $ do
         putStrLn $ "\tExtracting \"" ++ name ++ "\""
-        LBS.writeFile name contents
+        writeFileLBS name contents
     _ -> pass
 
 extract :: LBS.ByteString -> IO ()
