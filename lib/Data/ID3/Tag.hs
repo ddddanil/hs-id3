@@ -2,6 +2,7 @@ module Data.ID3.Tag where
 
 import Control.Lens.Getter
 import Control.Lens.TH
+import Data.Generics.Product.Fields
 import Data.Text.Prettyprint.Doc
 
 import Data.ID3.Genre
@@ -15,19 +16,18 @@ data ID3Ver
 -- v1.0 and v1.1
 
 data ID3v1xTag = ID3v1xTag
-  { _iD3v1xTagTitle :: LText
-  , _iD3v1xTagArtist :: LText
-  , _iD3v1xTagAlbum :: LText
-  , _iD3v1xTagYear :: LText
-  , _iD3v1xTagComment :: LText
-  , _iD3v1xTagTrack :: Maybe Word8
-  , _iD3v1xTagGenre :: Genre
+  { title :: LText
+  , artist :: LText
+  , album :: LText
+  , year :: LText
+  , comment :: LText
+  , track :: Maybe Word8
+  , genre :: Genre
   }
-  deriving (Eq, Show)
-makeFields ''ID3v1xTag
+  deriving (Eq, Show, Generic)
 
 isv11 :: ID3v1xTag -> Bool
-isv11 tag = isJust (tag^.track)
+isv11 tag = isJust (tag ^. field @"track")
 
 -- TODO instance pretty tag
 
@@ -35,41 +35,38 @@ isv11 tag = isJust (tag^.track)
 -- Enhanced tag
 
 data ID3v1ETag = ID3v1ETag
-  { _iD3v1ETagTitle :: LText
-  , _iD3v1ETagArtist :: LText
-  , _iD3v1ETagAlbum :: LText
-  , _iD3v1ETagSpeed :: Word8
-  , _iD3v1ETagGenre :: LText
-  , _iD3v1ETagStart_time :: (Int, Int)
-  , _iD3v1ETagEnd_time :: (Int, Int)
+  { title :: LText
+  , artist :: LText
+  , album :: LText
+  , speed :: Word8
+  , genre :: LText
+  , startTime :: (Int, Int)
+  , endTime :: (Int, Int)
   -- From 1.1
-  , _iD3v1ETagYear :: LText
-  , _iD3v1ETagComment :: LText
-  , _iD3v1ETagTrack :: Maybe Word8
+  , year :: LText
+  , comment :: LText
+  , track :: Maybe Word8
   }
-  deriving (Eq, Show)
-makeFields ''ID3v1ETag
+  deriving (Eq, Show, Generic)
 
 
 -- v1.2 tag
 
 data ID3v12Tag = ID3v12Tag
-  { _iD3v12TagTitle :: LText
-  , _iD3v12TagArtist :: LText
-  , _iD3v12TagAlbum :: LText
-  , _iD3v12TagComment :: LText
-  , _iD3v12TagSubgenre :: LText
+  { title :: LText
+  , artist :: LText
+  , album :: LText
+  , comment :: LText
+  , subgenre :: LText
   -- From 1.1
-  , _iD3v12TagYear :: LText
-  , _iD3v12TagTrack :: Maybe Word8
-  , _iD3v12TagGenre :: Genre -- Do custom Type
+  , year :: LText
+  , track :: Maybe Word8
+  , genre :: Genre -- Do custom Type
   }
-  deriving (Eq, Show)
-makeFields ''ID3v12Tag
+  deriving (Eq, Show, Generic)
 
 data ID3v1
   = ID3v1x ID3v1xTag
   | ID3v1E ID3v1ETag
   | ID3v12 ID3v12Tag
-  deriving (Eq, Show)
-makePrisms ''ID3v1
+  deriving (Eq, Show, Generic)

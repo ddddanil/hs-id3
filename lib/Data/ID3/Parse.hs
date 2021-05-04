@@ -4,6 +4,7 @@ import qualified Data.Text.Lazy as T
 import Control.Lens.Getter
 import Control.Lens.Setter
 import Control.Lens.TH
+import Data.Generics.Product.Fields
 import Control.Monad.Combinators
 import Text.Megaparsec hiding (State)
 import Text.Megaparsec.Byte
@@ -98,7 +99,7 @@ parseID3v1ETag :: Parser ID3v1ETag
 parseID3v1ETag = do
   tag <- _parseID3v1ETag
   v11 <- parseID3v1xTag
-  return $ tag (v11^.year) (v11^.comment) (v11^.track)
+  return $ tag (v11^.field @"year") (v11^.field @"comment") (v11^.field @"track")
 
 _parseID3v12Tag :: Parser (LText, LText, LText, LText, LText)
 _parseID3v12Tag = do
@@ -118,8 +119,8 @@ parseID3v12Tag = do
   (_title, _artist, _album, _comment, subgenre) <- _parseID3v12Tag
   v11 <- parseID3v1xTag
   return $ ID3v12Tag
-    ((v11^.title) `T.append` _title)
-    ((v11^.artist) `T.append` _artist)
-    ((v11^.album) `T.append` _album)
-    ((v11^.comment) `T.append` _comment)
-    subgenre (v11^.year) (v11^.track) (v11^.genre)
+    ((v11^.field @"title") `T.append` _title)
+    ((v11^.field @"artist") `T.append` _artist)
+    ((v11^.field @"album") `T.append` _album)
+    ((v11^.field @"comment") `T.append` _comment)
+    subgenre (v11^.field @"year") (v11^.field @"track") (v11^.field @"genre")

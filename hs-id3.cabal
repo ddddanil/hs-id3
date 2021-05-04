@@ -8,8 +8,12 @@ common common-options
 --      NoImplicitPrelude
       OverloadedStrings
     , GeneralizedNewtypeDeriving
+    , DeriveGeneric
+    , DataKinds
     , FlexibleInstances
     , FlexibleContexts
+    , NoMonomorphismRestriction
+    , AllowAmbiguousTypes
     , MultiParamTypeClasses
     , FunctionalDependencies
     , NumericUnderscores
@@ -17,6 +21,7 @@ common common-options
     , LambdaCase
     , RecordWildCards
     , DuplicateRecordFields
+    , TypeApplications
     , TemplateHaskell
   ghc-options:        -Wall
                       -Wno-type-defaults
@@ -34,6 +39,7 @@ common common-depends
     , bytestring
     , extra
     , lens
+    , generic-lens
     -- Trans
     , transformers
     -- Util

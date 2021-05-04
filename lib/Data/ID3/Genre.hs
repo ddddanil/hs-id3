@@ -15,198 +15,202 @@ genre x
 isExtended :: Genre -> Bool
 isExtended (Genre x) = x >= 80
 
+genreName :: Genre -> Text
+genreName (Genre x) = case x of
+  0   -> "Blues"
+  1   -> "Classic Rock"
+  2   -> "Country"
+  3   -> "Dance"
+  4   -> "Disco"
+  5   -> "Funk"
+  6   -> "Grunge"
+  7   -> "Hip-Hop"
+  8   -> "Jazz"
+  9   -> "Metal"
+  10  -> "New Age"
+  11  -> "Oldies"
+  12  -> "Other"
+  13  -> "Pop"
+  14  -> "Rhythm and Blues"
+  15  -> "Rap"
+  16  -> "Reggae"
+  17  -> "Rock"
+  18  -> "Techno"
+  19  -> "Industrial"
+  20  -> "Alternative"
+  21  -> "Ska"
+  22  -> "Death Metal"
+  23  -> "Pranks"
+  24  -> "Soundtrack"
+  25  -> "Ambient"
+  26  -> "Euro-Techno"
+  27  -> "Trip-Hop"
+  28  -> "Vocal"
+  29  -> "Jazz & Funk"
+  30  -> "Fusion"
+  31  -> "Trance"
+  32  -> "Classical"
+  33  -> "Instrumental"
+  34  -> "Acid"
+  35  -> "House"
+  36  -> "Game"
+  37  -> "Sound clip"
+  38  -> "Gospel"
+  39  -> "Noise"
+  40  -> "Alternative Rock"
+  41  -> "Bass"
+  42  -> "Soul"
+  43  -> "Punk"
+  44  -> "Space"
+  45  -> "Meditative"
+  46  -> "Instrumental Pop"
+  47  -> "Instrumental Rock"
+  48  -> "Ethnic"
+  49  -> "Gothic"
+  50  -> "Darkwave"
+  51  -> "Techno-Industrial"
+  52  -> "Electronic"
+  53  -> "Pop-Folk"
+  54  -> "Eurodance"
+  55  -> "Dream"
+  56  -> "Southern Rock"
+  57  -> "Comedy"
+  58  -> "Cult"
+  59  -> "Gangsta"
+  60  -> "Top 40"
+  61  -> "Christian Rap"
+  62  -> "Pop/Funk"
+  63  -> "Jungle"
+  64  -> "Native US"
+  65  -> "Cabaret"
+  66  -> "New Wave"
+  67  -> "Psychedelic"
+  68  -> "Rave"
+  69  -> "Show tunes"
+  70  -> "Trailer"
+  71  -> "Lo-Fi"
+  72  -> "Tribal"
+  73  -> "Acid Punk"
+  74  -> "Acid Jazz"
+  75  -> "Polka"
+  76  -> "Retro"
+  77  -> "Musical"
+  78  -> "Rock 'n' Roll"
+  79  -> "Hard rock"
+  80  -> "Folk"
+  81  -> "Folk-Rock"
+  82  -> "National Folk"
+  83  -> "Swing"
+  84  -> "Fast Fusion"
+  85  -> "Bebop"
+  86  -> "Latin"
+  87  -> "Revival"
+  88  -> "Celtic"
+  89  -> "Bluegrass"
+  90  -> "Avantgarde"
+  91  -> "Gothic Rock"
+  92  -> "Progressive Rock"
+  93  -> "Psychodelic Rock"
+  94  -> "Symphonic Rock"
+  95  -> ""
+  96  -> ""
+  97  -> ""
+  98  -> ""
+  99  -> ""
+  100 -> ""
+  101 -> ""
+  102 -> ""
+  103 -> ""
+  104 -> ""
+  105 -> ""
+  106 -> ""
+  107 -> ""
+  108 -> ""
+  109 -> ""
+  110 -> ""
+  111 -> ""
+  112 -> ""
+  113 -> ""
+  114 -> ""
+  115 -> ""
+  116 -> ""
+  117 -> ""
+  118 -> ""
+  119 -> ""
+  120 -> ""
+  121 -> ""
+  122 -> ""
+  123 -> ""
+  124 -> ""
+  125 -> ""
+  126 -> ""
+  127 -> ""
+  128 -> ""
+  129 -> ""
+  130 -> ""
+  131 -> ""
+  132 -> ""
+  133 -> ""
+  134 -> ""
+  135 -> ""
+  136 -> ""
+  137 -> ""
+  138 -> ""
+  139 -> ""
+  140 -> ""
+  141 -> ""
+  142 -> ""
+  143 -> ""
+  144 -> ""
+  145 -> ""
+  146 -> ""
+  147 -> ""
+  148 -> ""
+  149 -> ""
+  150 -> ""
+  151 -> ""
+  152 -> ""
+  153 -> ""
+  154 -> ""
+  155 -> ""
+  156 -> ""
+  157 -> ""
+  158 -> ""
+  159 -> ""
+  160 -> ""
+  161 -> ""
+  162 -> ""
+  163 -> ""
+  164 -> ""
+  165 -> ""
+  166 -> ""
+  167 -> ""
+  168 -> ""
+  169 -> ""
+  170 -> ""
+  171 -> ""
+  172 -> ""
+  173 -> ""
+  174 -> ""
+  175 -> ""
+  176 -> ""
+  177 -> ""
+  178 -> ""
+  179 -> ""
+  180 -> ""
+  181 -> ""
+  182 -> ""
+  183 -> ""
+  184 -> ""
+  185 -> ""
+  186 -> ""
+  187 -> ""
+  188 -> ""
+  189 -> ""
+  190 -> ""
+  191 -> ""
+  _ -> error "Illegal genre"
+
 instance Pretty Genre where
-  pretty = \case 
-    (Genre 0) -> pretty ("Blues" :: Text)
-    (Genre 1) -> pretty ("Classic Rock" :: Text)
-    (Genre 2) -> pretty ("Country" :: Text)
-    (Genre 3) -> pretty ("Dance" :: Text)
-    (Genre 4) -> pretty ("Disco" :: Text)
-    (Genre 5) -> pretty ("Funk" :: Text)
-    (Genre 6) -> pretty ("Grunge" :: Text)
-    (Genre 7) -> pretty ("Hip-Hop" :: Text)
-    (Genre 8) -> pretty ("Jazz" :: Text)
-    (Genre 9) -> pretty ("Metal" :: Text)
-    (Genre 10) -> pretty ("New Age" :: Text)
-    (Genre 11) -> pretty ("Oldies" :: Text)
-    (Genre 12) -> pretty ("Other" :: Text)
-    (Genre 13) -> pretty ("Pop" :: Text)
-    (Genre 14) -> pretty ("Rhythm and Blues" :: Text)
-    (Genre 15) -> pretty ("Rap" :: Text)
-    (Genre 16) -> pretty ("Reggae" :: Text)
-    (Genre 17) -> pretty ("Rock" :: Text)
-    (Genre 18) -> pretty ("Techno" :: Text)
-    (Genre 19) -> pretty ("Industrial" :: Text)
-    (Genre 20) -> pretty ("Alternative" :: Text)
-    (Genre 21) -> pretty ("Ska" :: Text)
-    (Genre 22) -> pretty ("Death Metal" :: Text)
-    (Genre 23) -> pretty ("Pranks" :: Text)
-    (Genre 24) -> pretty ("Soundtrack" :: Text)
-    (Genre 25) -> pretty ("Ambient" :: Text)
-    (Genre 26) -> pretty ("Euro-Techno" :: Text)
-    (Genre 27) -> pretty ("Trip-Hop" :: Text)
-    (Genre 28) -> pretty ("Vocal" :: Text)
-    (Genre 29) -> pretty ("Jazz & Funk" :: Text)
-    (Genre 30) -> pretty ("Fusion" :: Text)
-    (Genre 31) -> pretty ("Trance" :: Text)
-    (Genre 32) -> pretty ("Classical" :: Text)
-    (Genre 33) -> pretty ("Instrumental" :: Text)
-    (Genre 34) -> pretty ("Acid" :: Text)
-    (Genre 35) -> pretty ("House" :: Text)
-    (Genre 36) -> pretty ("Game" :: Text)
-    (Genre 37) -> pretty ("Sound clip" :: Text)
-    (Genre 38) -> pretty ("Gospel" :: Text)
-    (Genre 39) -> pretty ("Noise" :: Text)
-    (Genre 40) -> pretty ("Alternative Rock" :: Text)
-    (Genre 41) -> pretty ("Bass" :: Text)
-    (Genre 42) -> pretty ("Soul" :: Text)
-    (Genre 43) -> pretty ("Punk" :: Text)
-    (Genre 44) -> pretty ("Space" :: Text)
-    (Genre 45) -> pretty ("Meditative" :: Text)
-    (Genre 46) -> pretty ("Instrumental Pop" :: Text)
-    (Genre 47) -> pretty ("Instrumental Rock" :: Text)
-    (Genre 48) -> pretty ("Ethnic" :: Text)
-    (Genre 49) -> pretty ("Gothic" :: Text)
-    (Genre 50) -> pretty ("Darkwave" :: Text)
-    (Genre 51) -> pretty ("Techno-Industrial" :: Text)
-    (Genre 52) -> pretty ("Electronic" :: Text)
-    (Genre 53) -> pretty ("Pop-Folk" :: Text)
-    (Genre 54) -> pretty ("Eurodance" :: Text)
-    (Genre 55) -> pretty ("Dream" :: Text)
-    (Genre 56) -> pretty ("Southern Rock" :: Text)
-    (Genre 57) -> pretty ("Comedy" :: Text)
-    (Genre 58) -> pretty ("Cult" :: Text)
-    (Genre 59) -> pretty ("Gangsta" :: Text)
-    (Genre 60) -> pretty ("Top 40" :: Text)
-    (Genre 61) -> pretty ("Christian Rap" :: Text)
-    (Genre 62) -> pretty ("Pop/Funk" :: Text)
-    (Genre 63) -> pretty ("Jungle" :: Text)
-    (Genre 64) -> pretty ("Native US" :: Text)
-    (Genre 65) -> pretty ("Cabaret" :: Text)
-    (Genre 66) -> pretty ("New Wave" :: Text)
-    (Genre 67) -> pretty ("Psychedelic" :: Text)
-    (Genre 68) -> pretty ("Rave" :: Text)
-    (Genre 69) -> pretty ("Show tunes" :: Text)
-    (Genre 70) -> pretty ("Trailer" :: Text)
-    (Genre 71) -> pretty ("Lo-Fi" :: Text)
-    (Genre 72) -> pretty ("Tribal" :: Text)
-    (Genre 73) -> pretty ("Acid Punk" :: Text)
-    (Genre 74) -> pretty ("Acid Jazz" :: Text)
-    (Genre 75) -> pretty ("Polka" :: Text)
-    (Genre 76) -> pretty ("Retro" :: Text)
-    (Genre 77) -> pretty ("Musical" :: Text)
-    (Genre 78) -> pretty ("Rock 'n' Roll" :: Text)
-    (Genre 79) -> pretty ("Hard rock" :: Text)
-    (Genre 80) -> pretty ("" :: Text)
-    (Genre 81) -> pretty ("" :: Text)
-    (Genre 82) -> pretty ("" :: Text)
-    (Genre 83) -> pretty ("" :: Text)
-    (Genre 84) -> pretty ("" :: Text)
-    (Genre 85) -> pretty ("" :: Text)
-    (Genre 86) -> pretty ("" :: Text)
-    (Genre 87) -> pretty ("" :: Text)
-    (Genre 88) -> pretty ("" :: Text)
-    (Genre 89) -> pretty ("" :: Text)
-    (Genre 90) -> pretty ("" :: Text)
-    (Genre 91) -> pretty ("" :: Text)
-    (Genre 92) -> pretty ("" :: Text)
-    (Genre 93) -> pretty ("" :: Text)
-    (Genre 94) -> pretty ("" :: Text)
-    (Genre 95) -> pretty ("" :: Text)
-    (Genre 96) -> pretty ("" :: Text)
-    (Genre 97) -> pretty ("" :: Text)
-    (Genre 98) -> pretty ("" :: Text)
-    (Genre 99) -> pretty ("" :: Text)
-    (Genre 100) -> pretty ("" :: Text)
-    (Genre 101) -> pretty ("" :: Text)
-    (Genre 102) -> pretty ("" :: Text)
-    (Genre 103) -> pretty ("" :: Text)
-    (Genre 104) -> pretty ("" :: Text)
-    (Genre 105) -> pretty ("" :: Text)
-    (Genre 106) -> pretty ("" :: Text)
-    (Genre 107) -> pretty ("" :: Text)
-    (Genre 108) -> pretty ("" :: Text)
-    (Genre 109) -> pretty ("" :: Text)
-    (Genre 110) -> pretty ("" :: Text)
-    (Genre 111) -> pretty ("" :: Text)
-    (Genre 112) -> pretty ("" :: Text)
-    (Genre 113) -> pretty ("" :: Text)
-    (Genre 114) -> pretty ("" :: Text)
-    (Genre 115) -> pretty ("" :: Text)
-    (Genre 116) -> pretty ("" :: Text)
-    (Genre 117) -> pretty ("" :: Text)
-    (Genre 118) -> pretty ("" :: Text)
-    (Genre 119) -> pretty ("" :: Text)
-    (Genre 120) -> pretty ("" :: Text)
-    (Genre 121) -> pretty ("" :: Text)
-    (Genre 122) -> pretty ("" :: Text)
-    (Genre 123) -> pretty ("" :: Text)
-    (Genre 124) -> pretty ("" :: Text)
-    (Genre 125) -> pretty ("" :: Text)
-    (Genre 126) -> pretty ("" :: Text)
-    (Genre 127) -> pretty ("" :: Text)
-    (Genre 128) -> pretty ("" :: Text)
-    (Genre 129) -> pretty ("" :: Text)
-    (Genre 130) -> pretty ("" :: Text)
-    (Genre 131) -> pretty ("" :: Text)
-    (Genre 132) -> pretty ("" :: Text)
-    (Genre 133) -> pretty ("" :: Text)
-    (Genre 134) -> pretty ("" :: Text)
-    (Genre 135) -> pretty ("" :: Text)
-    (Genre 136) -> pretty ("" :: Text)
-    (Genre 137) -> pretty ("" :: Text)
-    (Genre 138) -> pretty ("" :: Text)
-    (Genre 139) -> pretty ("" :: Text)
-    (Genre 140) -> pretty ("" :: Text)
-    (Genre 141) -> pretty ("" :: Text)
-    (Genre 142) -> pretty ("" :: Text)
-    (Genre 143) -> pretty ("" :: Text)
-    (Genre 144) -> pretty ("" :: Text)
-    (Genre 145) -> pretty ("" :: Text)
-    (Genre 146) -> pretty ("" :: Text)
-    (Genre 147) -> pretty ("" :: Text)
-    (Genre 148) -> pretty ("" :: Text)
-    (Genre 149) -> pretty ("" :: Text)
-    (Genre 150) -> pretty ("" :: Text)
-    (Genre 151) -> pretty ("" :: Text)
-    (Genre 152) -> pretty ("" :: Text)
-    (Genre 153) -> pretty ("" :: Text)
-    (Genre 154) -> pretty ("" :: Text)
-    (Genre 155) -> pretty ("" :: Text)
-    (Genre 156) -> pretty ("" :: Text)
-    (Genre 157) -> pretty ("" :: Text)
-    (Genre 158) -> pretty ("" :: Text)
-    (Genre 159) -> pretty ("" :: Text)
-    (Genre 160) -> pretty ("" :: Text)
-    (Genre 161) -> pretty ("" :: Text)
-    (Genre 162) -> pretty ("" :: Text)
-    (Genre 163) -> pretty ("" :: Text)
-    (Genre 164) -> pretty ("" :: Text)
-    (Genre 165) -> pretty ("" :: Text)
-    (Genre 166) -> pretty ("" :: Text)
-    (Genre 167) -> pretty ("" :: Text)
-    (Genre 168) -> pretty ("" :: Text)
-    (Genre 169) -> pretty ("" :: Text)
-    (Genre 170) -> pretty ("" :: Text)
-    (Genre 171) -> pretty ("" :: Text)
-    (Genre 172) -> pretty ("" :: Text)
-    (Genre 173) -> pretty ("" :: Text)
-    (Genre 174) -> pretty ("" :: Text)
-    (Genre 175) -> pretty ("" :: Text)
-    (Genre 176) -> pretty ("" :: Text)
-    (Genre 177) -> pretty ("" :: Text)
-    (Genre 178) -> pretty ("" :: Text)
-    (Genre 179) -> pretty ("" :: Text)
-    (Genre 180) -> pretty ("" :: Text)
-    (Genre 181) -> pretty ("" :: Text)
-    (Genre 182) -> pretty ("" :: Text)
-    (Genre 183) -> pretty ("" :: Text)
-    (Genre 184) -> pretty ("" :: Text)
-    (Genre 185) -> pretty ("" :: Text)
-    (Genre 186) -> pretty ("" :: Text)
-    (Genre 187) -> pretty ("" :: Text)
-    (Genre 188) -> pretty ("" :: Text)
-    (Genre 189) -> pretty ("" :: Text)
-    (Genre 190) -> pretty ("" :: Text)
-    (Genre 191) -> pretty ("" :: Text)
-    _ -> pretty ("Unknown" :: Text)
+  pretty = pretty . genreName
+    
