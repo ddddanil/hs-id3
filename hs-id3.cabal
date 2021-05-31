@@ -54,11 +54,13 @@ library
       Data.ID3.Parse
     , Data.ID3.Build
     , Data.ID3.Genre
+    , Data.ID3.Version
     , Data.ID3.IO
     , Data.ID3.V1.Tag
     , Data.ID3.V1.Parse
     , Data.ID3.V1.Build
     , Data.ID3.V2.Encoding
+    , Data.ID3.V2.Frames
   other-modules:
   hs-source-dirs:   lib
   build-depends:

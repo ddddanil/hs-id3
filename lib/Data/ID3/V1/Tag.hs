@@ -7,11 +7,6 @@ import Data.Text.Prettyprint.Doc
 
 import Data.ID3.Genre
 
--- | ID3 Supported versions
-data ID3Ver
-  = ID3v1Ver { is_v11 :: Bool, is_Enh :: Bool, is_v12 :: Bool }
-  | ID3v2Ver { major :: Int, minor :: Int }
-
 
 -- v1.0 and v1.1
 
