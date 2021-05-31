@@ -4,8 +4,9 @@ module Data.ID3.IO (
 
 import qualified Data.ByteString as BS
 import Text.Megaparsec
-import Data.ID3.Tag
+import Data.ID3.V1.Tag
 import Data.ID3.Parse
+import Data.ID3.V1.Parse
 
 readv1File :: FilePath -> Handle -> IO (Maybe ID3v1)
 readv1File name file = do

@@ -1,4 +1,4 @@
-module Data.ID3.Tag where
+module Data.ID3.V1.Tag where
 
 import Control.Lens.Getter
 import Control.Lens.TH

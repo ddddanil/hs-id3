@@ -1,4 +1,4 @@
-cabal-version: 2.2
+cabal-version: 3.0
 name:          hs-id3
 version:       0.1
 
@@ -10,10 +10,13 @@ common common-options
     , GeneralizedNewtypeDeriving
     , DeriveGeneric
     , DataKinds
+    , GADTs
+    , KindSignatures
     , FlexibleInstances
     , FlexibleContexts
     , NoMonomorphismRestriction
     , AllowAmbiguousTypes
+    , RankNTypes
     , MultiParamTypeClasses
     , FunctionalDependencies
     , NumericUnderscores
@@ -48,12 +51,16 @@ common common-depends
 library
   import:           common-options, common-depends
   exposed-modules:
-      Data.ID3.Tag
-    , Data.ID3.Parse
+      Data.ID3.Parse
+    , Data.ID3.Build
     , Data.ID3.Genre
     , Data.ID3.IO
+    , Data.ID3.V1.Tag
+    , Data.ID3.V1.Parse
+    , Data.ID3.V1.Build
+    , Data.ID3.V2.Encoding
   other-modules:
-  hs-source-dirs:     lib
+  hs-source-dirs:   lib
   build-depends:
     -- Parsing
       megaparsec
