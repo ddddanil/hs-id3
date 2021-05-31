@@ -10,8 +10,6 @@ import Control.Lens.Getter
 import Control.Lens.Setter
 import Control.Lens.TH
 
-import Data.ID3.Genre hiding (genre)
-
 putPadBS :: Int -> BS.ByteString -> B.Builder 
 putPadBS size str
   | size < 0 = error "Pad size is negative"
@@ -36,6 +34,4 @@ putPadText size text =
 putPadLText :: Int -> LT.Text -> B.Builder
 putPadLText size text = putPadText size $ fromLazy text 
 
-putGenre :: Genre -> B.Builder 
-putGenre (Genre g) = B.word8 g
 

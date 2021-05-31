@@ -5,11 +5,13 @@ import Control.Lens.Getter
 import Control.Lens.Setter
 import Data.Generics.Product.Fields
 import Control.Monad.Combinators
-import Text.Megaparsec hiding (State)
+import Text.Megaparsec hiding (parse)
 import Text.Megaparsec.Byte
 import Text.Megaparsec.Byte.Lexer
 import Data.ID3.V1.Tag
 import Data.ID3.Parse
+import Data.ID3.Genre
+import Data.ID3.ReadWrite
 
 parseID3v1xTag :: Parser ID3v1xTag
 parseID3v1xTag = do
@@ -29,7 +31,7 @@ parseID3v1xTag = do
           }, do { cont <- parseTextField 2 <?> "comment";
                   return (comment `T.append` cont, Nothing)
           }]
-  genre <- parseGenre 
+  genre <- parse @Genre
   guard =<< uses buf_pos (== 0) <?> "wrong tag length"
   return $ ID3v1xTag title artist album year comment track genre
 

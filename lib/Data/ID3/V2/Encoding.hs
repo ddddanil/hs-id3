@@ -2,6 +2,7 @@ module Data.ID3.V2.Encoding where
 
 import qualified Data.Text.Encoding as E
 import Control.Lens.Iso
+import Data.ID3.ReadWrite
 
 data FrameEnc 
   = EncLatin1

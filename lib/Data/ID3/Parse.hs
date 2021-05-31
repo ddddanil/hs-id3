@@ -9,7 +9,6 @@ import Control.Monad.Combinators
 import Text.Megaparsec hiding (State)
 import Text.Megaparsec.Byte
 import Text.Megaparsec.Byte.Lexer
-import Data.ID3.Genre hiding (genre)
 
 data ParserOpts = ParserOpts
   { _encoder :: Text -> ByteString
@@ -44,9 +43,3 @@ parseTextField size = do
   text <- decode <$> takeP Nothing size
   buf_pos -= size
   return $ T.takeWhile (\c -> c /= chr 0) text
-
-parseGenre :: Parser Genre
-parseGenre = do
-  g <- pByte
-  guard (g <= 191) <?> "valid genre byte"
-  return $ Genre g

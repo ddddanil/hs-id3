@@ -1,7 +1,18 @@
 {-# LANGUAGE UndecidableInstances #-}
-module Data.ID3.Genre where
+module Data.ID3.Genre (
+  Genre
+, genre
+, _Genre
+, genreRepr
+, isExtended
+) where
 
+import Control.Lens
 import Data.Text.Prettyprint.Doc
+import qualified Data.ByteString.Builder as B
+import Text.Megaparsec
+import Data.ID3.ReadWrite
+import Data.ID3.Parse
 
 newtype Genre = Genre Word8
   deriving (Show, Eq, Ord, Read)
@@ -12,8 +23,33 @@ genre x
   | x > 191 = Nothing
   | otherwise = Just . Genre . toEnum $ x
 
-isExtended :: Genre -> Bool
-isExtended (Genre x) = x >= 80
+_Genre :: Prism' Word8 Genre
+_Genre = prism' coerce (genre . fromIntegral)
+
+genreRepr :: Getter Genre Word8
+genreRepr = to coerce
+
+isExtended :: Getter Genre Bool
+isExtended = to $ \(Genre x) -> x >= 80
+
+
+-- Read & Write
+
+parseGenre :: Parser Genre
+parseGenre = do
+  g <- pByte
+  guard (g <= 191) <?> "valid genre byte"
+  return $ Genre g
+
+writeGenre :: Genre -> B.Builder 
+writeGenre (Genre g) = B.word8 g
+
+instance ReadWrite Genre where
+  parse = parseGenre
+  write = writeGenre
+
+
+-- Pretty
 
 genreName :: Genre -> Text
 genreName (Genre x) = case x of
