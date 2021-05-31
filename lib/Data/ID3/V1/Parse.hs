@@ -1,6 +1,6 @@
 module Data.ID3.V1.Parse where
 
-import qualified Data.Text.Lazy as T
+import qualified Data.Text as T
 import Control.Lens.Getter
 import Control.Lens.Setter
 import Data.Generics.Product.Fields
@@ -21,7 +21,7 @@ parseID3v1xTag = do
   title <- parseTextField 30 <?> "title"
   artist <- parseTextField 30 <?> "artist"
   album <- parseTextField 30 <?> "album"
-  year <- toLText <$> replicateM 4 (w8toC <$> digitChar)
+  year <- toText <$> replicateM 4 (w8toC <$> digitChar)
   buf_pos -= 4
   (comment, track) <- do
     comment <- parseTextField 28 <?> "comment"
@@ -35,7 +35,7 @@ parseID3v1xTag = do
   guard =<< uses buf_pos (== 0) <?> "wrong tag length"
   return $ ID3v1xTag title artist album year comment track genre
 
-_parseID3v1ETag :: Parser (LText -> LText -> Maybe Word8 -> ID3v1ETag)
+_parseID3v1ETag :: Parser (Text -> Text -> Maybe Word8 -> ID3v1ETag)
 _parseID3v1ETag = do
   encode <- use encoder
   _ <- string $ encode "TAG+"
@@ -62,7 +62,7 @@ parseID3v1ETag = do
   v11 <- parseID3v1xTag
   return $ tag (v11^.field @"year") (v11^.field @"comment") (v11^.field @"track")
 
-_parseID3v12Tag :: Parser (LText, LText, LText, LText, LText)
+_parseID3v12Tag :: Parser (Text, Text, Text, Text, Text)
 _parseID3v12Tag = do
   encode <- use encoder
   _ <- string $ encode "EXT"

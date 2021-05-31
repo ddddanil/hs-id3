@@ -1,6 +1,7 @@
 module Data.ID3.Parse where
 
-import qualified Data.Text.Lazy as T
+import qualified Data.Text as T
+import qualified Data.Text.Lazy as LT
 import Control.Lens.Getter
 import Control.Lens.Setter
 import Control.Lens.TH
@@ -12,7 +13,7 @@ import Text.Megaparsec.Byte.Lexer
 
 data ParserOpts = ParserOpts
   { _encoder :: Text -> ByteString
-  , _decoder :: ByteString -> LText
+  , _decoder :: ByteString -> Text
   , _buf_pos :: Int
   }
 makeLenses ''ParserOpts
@@ -37,7 +38,16 @@ pByte = do
 traceBufPos :: Parser ()
 traceBufPos = traceShowM =<< use buf_pos
 
-parseTextField :: Int -> Parser LText
+{-
+parseLTextField :: Int -> Parser LText
+parseLTextField size = do
+  decode <- use decoder
+  text <- decode <$> takeP Nothing size
+  buf_pos -= size
+  return $ LT.takeWhile (\c -> c /= chr 0) text
+-}
+
+parseTextField :: Int -> Parser Text
 parseTextField size = do
   decode <- use decoder
   text <- decode <$> takeP Nothing size

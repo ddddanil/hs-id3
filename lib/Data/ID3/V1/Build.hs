@@ -16,13 +16,13 @@ import Data.ID3.V1.Tag
 putID3v1Tag :: ID3v1xTag -> B.Builder
 putID3v1Tag tag =
   putSText "TAG"
-  <> putPadLText 30 (tag ^. field @"title")
-  <> putPadLText 30 (tag ^. field @"artist")
-  <> putPadLText 30 (tag ^. field @"album")
-  <> BB.putLText (tag ^. field @"year")
+  <> putPadText 30 (tag ^. field @"title")
+  <> putPadText 30 (tag ^. field @"artist")
+  <> putPadText 30 (tag ^. field @"album")
+  <> putSText (tag ^. field @"year")
   <> case (tag ^. field @"track") of
-       Nothing -> putPadLText 30 (tag ^. field @"comment")
-       Just tr -> putPadLText 28 (tag ^. field @"comment") <> B.word8 0 <> B.word8 tr
+       Nothing -> putPadText 30 (tag ^. field @"comment")
+       Just tr -> putPadText 28 (tag ^. field @"comment") <> B.word8 0 <> B.word8 tr
   <> write (tag ^. field @"genre")
 
 
