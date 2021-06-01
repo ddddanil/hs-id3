@@ -41,6 +41,7 @@ common common-depends
     -- Data
       text
     , bytestring
+    , bitset >= 1.5.0
     , extra
     , lens
     , generic-lens
@@ -64,6 +65,7 @@ library
     , Data.ID3.V1.Instances
     , Data.ID3.V2.Encoding
     , Data.ID3.V2.Frames
+    , Data.ID3.V2.Header
   other-modules:
   hs-source-dirs:   lib
   build-depends:
