@@ -2,8 +2,7 @@ module Data.ID3.Parse where
 
 import qualified Data.Text as T
 import qualified Data.Text.Lazy as LT
-import Control.Lens.Getter
-import Control.Lens.Setter
+import Control.Lens
 import Control.Lens.TH
 import Data.Generics.Product.Fields
 import Control.Monad.Combinators
@@ -34,6 +33,12 @@ pByte = do
   byte <- anySingle 
   buf_pos -= 1
   return byte
+
+parseString :: (ToText a) => a -> Parser ByteString
+parseString s = do
+  encode <- use encoder
+  string . encode . toText $ s
+
 
 traceBufPos :: Parser ()
 traceBufPos = traceShowM =<< use buf_pos

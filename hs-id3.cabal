@@ -9,6 +9,7 @@ common common-options
       OverloadedStrings
     , GeneralizedNewtypeDeriving
     , DeriveGeneric
+    , DeriveDataTypeable
     , DataKinds
     , GADTs
     , KindSignatures
@@ -41,7 +42,7 @@ common common-depends
     -- Data
       text
     , bytestring
-    , bitset >= 1.5.0
+    , binary
     , extra
     , lens
     , generic-lens

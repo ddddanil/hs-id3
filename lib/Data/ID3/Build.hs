@@ -6,9 +6,6 @@ import qualified Data.Text.Lazy as LT
 import qualified Data.Text.Encoding as E
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Builder as B
-import Control.Lens.Getter
-import Control.Lens.Setter
-import Control.Lens.TH
 
 putPadBS :: Int -> BS.ByteString -> B.Builder 
 putPadBS size str

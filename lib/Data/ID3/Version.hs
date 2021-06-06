@@ -1,16 +1,18 @@
 module Data.ID3.Version (
-  ID3Version
+  ID3Version (..)
 , major
 , minor
+, revision
 , _ID3v1Version
 , _ID3v2Version
-, ID3v1Ver
+, ID3v1Ver (..)
 , _ID3v10Ver
 , _ID3v11Ver
 , _ID3v12Ver
 , _ID3v1EVer
-, ID3v2Ver
+, ID3v2Ver (ID3v2Ver)
 , v2minor
+, v2revision
 ) where
 
 import Control.Lens
@@ -22,14 +24,15 @@ data ID3v1Ver
   | ID3v1EVer
   deriving (Eq, Show, Enum, Generic)
 
-newtype ID3v2Ver = ID3v2Ver
-  { _v2minor :: Int
+data ID3v2Ver = ID3v2Ver
+  { _v2minor :: !Int
+  , _v2revision :: !Int
   }
   deriving (Eq, Show, Generic)
 
 data ID3Version
-  = ID3v1Version ID3v1Ver
-  | ID3v2Version ID3v2Ver
+  = ID3v1Version !ID3v1Ver
+  | ID3v2Version !ID3v2Ver
   deriving (Eq, Show, Generic)
 
 makePrisms ''ID3v1Ver
@@ -48,4 +51,9 @@ minor = to $ \case
     ID3v11Ver -> 1
     ID3v12Ver -> 2
     ID3v1EVer -> 3
-  ID3v2Version (ID3v2Ver minor) -> minor
+  ID3v2Version (ID3v2Ver minor _) -> minor
+
+revision :: Getter ID3Version Int
+revision = to $ \case
+  ID3v1Version _ -> 0
+  ID3v2Version (ID3v2Ver _ rev) -> rev

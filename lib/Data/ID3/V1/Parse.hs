@@ -15,8 +15,7 @@ import Data.ID3.ReadWrite
 
 parseID3v1xTag :: Parser ID3v1xTag
 parseID3v1xTag = do
-  encode <- use encoder
-  _ <- string $ encode "TAG"
+  parseString @Text "TAG"
   buf_pos .= 128 - 3
   title <- parseTextField 30 <?> "title"
   artist <- parseTextField 30 <?> "artist"
@@ -37,8 +36,7 @@ parseID3v1xTag = do
 
 _parseID3v1ETag :: Parser (Text -> Text -> Maybe Word8 -> ID3v1ETag)
 _parseID3v1ETag = do
-  encode <- use encoder
-  _ <- string $ encode "TAG+"
+  parseString @Text "TAG+"
   buf_pos .= 227 - 4
   title <- parseTextField 60 <?> "title"
   artist <- parseTextField 60 <?> "artist"
@@ -64,8 +62,7 @@ parseID3v1ETag = do
 
 _parseID3v12Tag :: Parser (Text, Text, Text, Text, Text)
 _parseID3v12Tag = do
-  encode <- use encoder
-  _ <- string $ encode "EXT"
+  parseString @Text "EXT"
   buf_pos .= 128 - 3
   title <- parseTextField 30 <?> "title"
   artist <- parseTextField 30 <?> "artist"
