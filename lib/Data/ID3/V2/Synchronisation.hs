@@ -1,14 +1,17 @@
 module Data.ID3.V2.Synchronisation where
 
-import Data.Monoid.Extra
+import Control.Lens
 import qualified Data.ByteString as BS
+import qualified Data.ByteString.Builder as B
 import Data.ByteString.Lens
 import Data.Binary
 import Data.Bits
 import Data.Bits.Lens
-import Control.Lens
+import Data.Bits.Lens.Extra
+import Data.List.Lens.Extra
+import Data.Monoid.Extra
 import Text.Megaparsec
-import qualified Data.ByteString.Builder as B
+import GHC.Real.Lens
 import Data.ID3.Version
 import Data.ID3.Parse
 import Data.ID3.Build
@@ -18,26 +21,10 @@ newtype SynchInt = SynchInt Word32
   deriving (Eq, Ord, Show, Generic)
   deriving newtype (Bits, Num, Real, Enum, Integral)
 
-shiftedL :: (Bits a, Bits b) => Int -> Iso a b a b
-shiftedL n = iso (`shiftL` n) (`shiftR` n)
-
-
-shiftedR :: (Bits a, Bits b) => Int -> Iso a b a b
-shiftedR n = iso (`shiftR` n) (`shiftL` n)
-
-chunks :: Int -> [a] -> [[a]]
-chunks n = takeWhile (not . null) . unfoldr (Just . splitAt n)
-
-asChunks :: Int -> Iso [a] [b] [[a]] [[b]]
-asChunks n = iso (chunks n) concat
-
 fromBits :: Bits a => [Bool] -> a
 fromBits = ifoldlOf itraversed
     (\i a n -> if n then a .|. bit i else a)
     zeroBits
-
-integral :: forall b a t s . (Integral s, Num a, Integral b, Num t) => Iso s t a b
-integral = iso fromIntegral fromIntegral
 
 synchronisedInt :: Iso' SynchInt Word32
 synchronisedInt = iso unsynch synch
@@ -66,3 +53,12 @@ instance ReadWrite SynchInt where
   parse = parseSynchInt
   write = writeSynchInt
 
+
+-- asPairs :: f a -> f (a, a)
+-- asPairs =
+
+-- synchronisedBS :: Iso' ByteString ByteString
+-- synchronisedBS = iso unsynch synch
+--   where
+--     unsynch :: ByteString -> ByteString
+--     unsynch = 
