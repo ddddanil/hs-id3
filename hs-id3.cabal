@@ -25,6 +25,8 @@ common common-options
     , FunctionalDependencies
     , NumericUnderscores
     , BangPatterns
+    , PatternSynonyms
+    , ViewPatterns
     , LambdaCase
     , RecordWildCards
     , ScopedTypeVariables
@@ -70,14 +72,14 @@ library
   exposed-modules:
       Data.ID3.Parse
     , Data.ID3.Build
-    , Data.ID3.Genre
     , Data.ID3.Version
     , Data.ID3.ReadWrite
-    , Data.ID3.IO
+    , Data.ID3.V1.Genre
     , Data.ID3.V1.Tag
-    , Data.ID3.V1.Parse
-    , Data.ID3.V1.Build
-    , Data.ID3.V1.Instances
+    , Data.ID3.V1.Tag.V10
+    , Data.ID3.V1.Tag.V11
+    , Data.ID3.V1.Tag.V12
+    , Data.ID3.V1.Tag.V1E
     , Data.ID3.V2.Encoding
     , Data.ID3.V2.Frames
     , Data.ID3.V2.Synchronisation

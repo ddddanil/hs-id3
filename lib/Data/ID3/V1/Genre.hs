@@ -1,5 +1,5 @@
 {-# LANGUAGE UndecidableInstances #-}
-module Data.ID3.Genre (
+module Data.ID3.V1.Genre (
   Genre
 , genre
 , _Genre

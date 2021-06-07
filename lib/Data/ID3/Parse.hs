@@ -1,14 +1,10 @@
 module Data.ID3.Parse where
 
 import qualified Data.Text as T
-import qualified Data.Text.Lazy as LT
 import Control.Lens
-import Control.Lens.TH
-import Data.Generics.Product.Fields
 import Control.Monad.Combinators
 import Text.Megaparsec hiding (State)
 import Text.Megaparsec.Byte
-import Text.Megaparsec.Byte.Lexer
 
 data ParserOpts = ParserOpts
   { _encoder :: Text -> ByteString
@@ -58,3 +54,11 @@ parseTextField size = do
   text <- decode <$> takeP Nothing size
   buf_pos -= size
   return $ T.takeWhile (\c -> c /= chr 0) text
+
+withInput :: MonadParsec e s m => s -> m a -> m a
+withInput i m = do
+  st <- getParserState
+  setInput i
+  res <- m
+  setParserState st
+  return res
