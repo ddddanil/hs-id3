@@ -96,7 +96,10 @@ test-suite lib
   import:             common-options, common-depends
   main-is:            Main.hs
   other-modules:
-    V1Suite
+    -- V1Suite
+      V1.Instances
+    , V1.Lenses
+    , V1.Suite
   hs-source-dirs:     test
   type:               exitcode-stdio-1.0
   build-depends:
@@ -104,7 +107,11 @@ test-suite lib
     -- Testing
     , tasty
     , tasty-hunit
+    , tasty-quickcheck
     , tasty-expected-failure
+    , QuickCheck
+    , quickcheck-instances
+    , lens-properties
     -- Download tests
     , tar
     , zlib

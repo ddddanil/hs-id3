@@ -1,4 +1,4 @@
-module V1Suite
+module V1.Suite
   ( getSuite
   , fileList
   , testV1Suite

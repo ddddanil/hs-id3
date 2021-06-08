@@ -1,4 +1,6 @@
-module Data.ID3.V1.Tag.V12 where
+module Data.ID3.V1.Tag.V12 (
+  ID3v12Tag(ID3v12Tag)
+) where
 
 import Control.Lens
 import Data.Generics.Product
