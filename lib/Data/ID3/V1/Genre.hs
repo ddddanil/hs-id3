@@ -15,7 +15,8 @@ import Data.ID3.ReadWrite
 import Data.ID3.Parse
 
 newtype Genre = Genre Word8
-  deriving (Show, Eq, Ord, Read)
+  deriving (Show, Generic)
+  deriving newtype (Eq, Ord, Read, Bounded, Enum)
 
 genre :: Int -> Maybe Genre
 genre x

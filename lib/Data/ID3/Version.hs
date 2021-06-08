@@ -22,7 +22,7 @@ data ID3v1Ver
   | ID3v11Ver
   | ID3v12Ver
   | ID3v1EVer
-  deriving (Eq, Show, Enum, Generic)
+  deriving (Eq, Show, Bounded, Enum, Generic)
 
 data ID3v2Ver = ID3v2Ver
   { _v2minor :: !Int
@@ -46,11 +46,7 @@ major = to $ \case
 
 minor :: Getter ID3Version Int
 minor = to $ \case
-  ID3v1Version ver -> case ver of
-    ID3v10Ver -> 0
-    ID3v11Ver -> 1
-    ID3v12Ver -> 2
-    ID3v1EVer -> 3
+  ID3v1Version ver -> fromEnum ver
   ID3v2Version (ID3v2Ver minor _) -> minor
 
 revision :: Getter ID3Version Int

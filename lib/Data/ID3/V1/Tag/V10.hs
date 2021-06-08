@@ -1,10 +1,11 @@
-module Data.ID3.V1.Tag.V10 where
+module Data.ID3.V1.Tag.V10 (
+  ID3v10Tag(ID3v10Tag)
+) where
 
 import Control.Lens
-import Control.Lens.TH
 import Data.Generics.Product.Fields
 import Text.Megaparsec hiding (parse)
-import Text.Megaparsec.Byte
+import Text.Megaparsec.Byte.Lexer
 import qualified Data.ByteString.Builder as B
 import Data.ID3.Parse
 import Data.ID3.Build
@@ -16,7 +17,7 @@ data ID3v10Tag = ID3v10Tag
   { title :: !Text
   , artist :: !Text
   , album :: !Text
-  , year :: !Text
+  , year :: !Word16
   , comment :: !Text
   , genre :: !Genre
   }
@@ -29,7 +30,8 @@ parseID3v10Tag = do
   title <- parseTextField 30 <?> "title"
   artist <- parseTextField 30 <?> "artist"
   album <- parseTextField 30 <?> "album"
-  year <- toText <$> replicateM 4 (w8toC <$> digitChar)
+  year_ <- takeP (Just "decimal") 4
+  year <- withInput year_ decimal
   comment <- parseTextField 30 <?> "comment"
   genre <- parse @Genre
   return $ ID3v10Tag title artist album year comment genre
@@ -40,7 +42,7 @@ writeID3v10Tag tag =
   <> putPadText 30 (tag ^. field @"title")
   <> putPadText 30 (tag ^. field @"artist")
   <> putPadText 30 (tag ^. field @"album")
-  <> putSText (tag ^. field @"year")
+  <> B.word16Dec (tag ^. field @"year")
   <> putPadText 30 (tag ^. field @"comment")
   <> write (tag ^. field @"genre")
 

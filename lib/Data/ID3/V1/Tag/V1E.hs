@@ -1,4 +1,7 @@
-module Data.ID3.V1.Tag.V1E where
+module Data.ID3.V1.Tag.V1E (
+  ID3v1ETag(ID3v1ETag)
+, TagTime(TagTime)
+) where
 
 import Control.Lens
 import Data.Generics.Product
@@ -53,7 +56,7 @@ parseID3v1ETag = do
   speed <- anySingle
   genre <- parseTextField 30 <?> "genre"
   [start_time, end_time] <- replicateM 2 parseTagTime
-  v11 <- parseID3v11Tag
+  v11 <- parse @ID3v11Tag
       <&> the @"v10tag" . the @"title" .~ title
       <&> the @"v10tag" . the @"artist" .~ artist
       <&> the @"v10tag" . the @"album" .~ album
