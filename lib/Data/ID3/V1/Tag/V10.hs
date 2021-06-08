@@ -6,7 +6,7 @@ import Control.Lens
 import Data.Generics.Product.Fields
 import Text.Megaparsec hiding (parse)
 import Text.Megaparsec.Byte.Lexer
-import qualified Data.ByteString.Builder as B
+import Data.ByteString.Builder
 import Data.ID3.Parse
 import Data.ID3.Build
 import Data.ID3.ReadWrite
@@ -26,7 +26,7 @@ data ID3v10Tag = ID3v10Tag
 
 parseID3v10Tag :: Parser ID3v10Tag
 parseID3v10Tag = do
-  parseString @Text "TAG"
+  parseString "TAG"
   title <- parseTextField 30 <?> "title"
   artist <- parseTextField 30 <?> "artist"
   album <- parseTextField 30 <?> "album"
@@ -36,14 +36,14 @@ parseID3v10Tag = do
   genre <- parse @Genre
   return $ ID3v10Tag title artist album year comment genre
 
-writeID3v10Tag :: ID3v10Tag -> B.Builder
+writeID3v10Tag :: ID3v10Tag -> Builder
 writeID3v10Tag tag =
-  putSText "TAG"
-  <> putPadText 30 (tag ^. field @"title")
-  <> putPadText 30 (tag ^. field @"artist")
-  <> putPadText 30 (tag ^. field @"album")
-  <> B.word16Dec (tag ^. field @"year")
-  <> putPadText 30 (tag ^. field @"comment")
+  writeText "TAG"
+  <> writePadText 30 (tag ^. field @"title")
+  <> writePadText 30 (tag ^. field @"artist")
+  <> writePadText 30 (tag ^. field @"album")
+  <> word16Dec (tag ^. field @"year")
+  <> writePadText 30 (tag ^. field @"comment")
   <> write (tag ^. field @"genre")
 
 instance ReadWrite ID3v10Tag where

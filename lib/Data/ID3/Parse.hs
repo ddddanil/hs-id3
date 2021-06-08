@@ -1,59 +1,38 @@
 module Data.ID3.Parse where
 
-import qualified Data.Text as T
 import Control.Lens
 import Control.Monad.Combinators
+import qualified Data.ByteString as BS
+import qualified Data.Text as T
+import Data.Text.Encoding.Lens
 import Text.Megaparsec hiding (State)
 import Text.Megaparsec.Byte
 
 data ParserOpts = ParserOpts
-  { _encoder :: Text -> ByteString
-  , _decoder :: ByteString -> Text
-  , _buf_pos :: Int
+  { _encoding :: Encoding
   }
+  deriving (Show, Generic)
 makeLenses ''ParserOpts
 
 type Parser = ParsecT Void ByteString (State ParserOpts) -- Add state
 
-runTagParser :: Parser a -> Text -> ByteString -> Either (ParseErrorBundle ByteString Void) a
-runTagParser p n s = evalState (runParserT p (toString n) s) (ParserOpts encodeUtf8 decodeUtf8 0)
+runTagParser :: Parser a -> String -> ByteString -> Either (ParseErrorBundle ByteString Void) a
+runTagParser p n s = evalState (runParserT p n s) (ParserOpts Utf8)
 
-runTagParser_ :: Parser a -> Text -> ByteString -> Maybe a
+runTagParser_ :: Parser a -> String -> ByteString -> Maybe a
 runTagParser_ p n = rightToMaybe . runTagParser p n
 
-w8toC :: Word8 -> Char 
-w8toC = chr . fromEnum
-
-pByte :: Parser Word8
-pByte = do
-  byte <- anySingle 
-  buf_pos -= 1
-  return byte
-
-parseString :: (ToText a) => a -> Parser ByteString
+parseString :: Text -> Parser ByteString
 parseString s = do
-  encode <- use encoder
-  string . encode . toText $ s
-
-
-traceBufPos :: Parser ()
-traceBufPos = traceShowM =<< use buf_pos
-
-{-
-parseLTextField :: Int -> Parser LText
-parseLTextField size = do
-  decode <- use decoder
-  text <- decode <$> takeP Nothing size
-  buf_pos -= size
-  return $ LT.takeWhile (\c -> c /= chr 0) text
--}
+  enc <- use encoding
+  string $ s ^. encoded enc
 
 parseTextField :: Int -> Parser Text
 parseTextField size = do
-  decode <- use decoder
-  text <- decode <$> takeP Nothing size
-  buf_pos -= size
-  return $ T.takeWhile (\c -> c /= chr 0) text
+  enc <- use encoding
+  takeP (Just "character") size
+      <&> BS.takeWhile (/= 0)
+      <&> decode Utf8
 
 withInput :: MonadParsec e s m => s -> m a -> m a
 withInput i m = do

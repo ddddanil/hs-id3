@@ -7,7 +7,7 @@ import Control.Lens
 import Data.Generics.Product
 import Text.Megaparsec hiding (parse)
 import Text.Megaparsec.Byte.Lexer
-import qualified Data.ByteString.Builder as B
+import Data.ByteString.Builder
 import Data.ID3.Parse
 import Data.ID3.Build
 import Data.ID3.ReadWrite
@@ -37,11 +37,11 @@ parseTagTime = do
   seconds <- withInput seconds_ decimal 
   return $ TagTime minutes seconds
 
-writeTagTime :: TagTime -> B.Builder
+writeTagTime :: TagTime -> Builder
 writeTagTime t =
-  B.wordDec (t ^. the @"minutes")
-  <> B.char7 ':'
-  <> B.wordDec (t ^. the @"seconds")
+  wordDec (t ^. the @"minutes")
+  <> char7 ':'
+  <> wordDec (t ^. the @"seconds")
 
 instance ReadWrite TagTime where
   parse = parseTagTime
@@ -49,7 +49,7 @@ instance ReadWrite TagTime where
 
 parseID3v1ETag :: Parser ID3v1ETag
 parseID3v1ETag = do
-  parseString @Text "TAG+"
+  parseString "TAG+"
   title <- parseTextField 60 <?> "title"
   artist <- parseTextField 60 <?> "artist"
   album <- parseTextField 60 <?> "album"
@@ -62,13 +62,13 @@ parseID3v1ETag = do
       <&> the @"v10tag" . the @"album" .~ album
   return $ ID3v1ETag v11 speed genre start_time end_time
 
-writeID3v1ETag :: ID3v1ETag -> B.Builder 
+writeID3v1ETag :: ID3v1ETag -> Builder 
 writeID3v1ETag tag =
-  putSText "TAG+"
-  <> putPadText 60 (tag ^. dropping 30 (the @"v11tag" . the @"v10tag" . the @"title"))
-  <> putPadText 60 (tag ^. dropping 30 (the @"v11tag" . the @"v10tag" . the @"artist"))
-  <> putPadText 60 (tag ^. dropping 30 (the @"v11tag" . the @"v10tag" . the @"album"))
-  <> B.word8 (tag ^. the @"speed")
+  writeText "TAG+"
+  <> writePadText 60 (tag ^. dropping 30 (the @"v11tag" . the @"v10tag" . the @"title"))
+  <> writePadText 60 (tag ^. dropping 30 (the @"v11tag" . the @"v10tag" . the @"artist"))
+  <> writePadText 60 (tag ^. dropping 30 (the @"v11tag" . the @"v10tag" . the @"album"))
+  <> word8 (tag ^. the @"speed")
   <> write (tag ^. the @"startTime")
   <> write (tag ^. the @"endTime")
   <> write (tag ^. the @"v11tag")

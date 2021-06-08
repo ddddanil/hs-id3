@@ -7,7 +7,7 @@ import Data.Bits
 import Data.Bits.Lens
 import Control.Lens
 import Text.Megaparsec hiding (parse)
-import qualified Data.ByteString.Builder as B
+import Data.ByteString.Builder
 import Data.ID3.Version
 import Data.ID3.Parse
 import Data.ID3.Build
@@ -42,18 +42,18 @@ makeLenses ''ID3v2Header
 
 parsev2Header :: Parser ID3v2Header
 parsev2Header = do
-  parseString @Text "ID3"
+  parseString "ID3"
   version <- ID3v2Ver <$> (fromIntegral <$> anySingle) <*> (fromIntegral <$> anySingle)
   flags <- anySingle
   size <- parse @SynchInt
   return $ ID3v2Header version flags size
 
-writev2Header :: ID3v2Header -> B.Builder
+writev2Header :: ID3v2Header -> Builder
 writev2Header h = 
-  putSText "ID3"
-  <> B.word8 (h^.version.v2minor.enum)
-  <> B.word8 (h^.version.v2revision.enum)
-  <> B.word8 (h^.flags)
+  writeText "ID3"
+  <> word8 (h^.version.v2minor.enum)
+  <> word8 (h^.version.v2revision.enum)
+  <> word8 (h^.flags)
   <> write (h^.size)
 
 instance ReadWrite ID3v2Header where

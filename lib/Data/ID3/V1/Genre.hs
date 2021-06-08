@@ -38,7 +38,7 @@ isExtended = to $ \(Genre x) -> x >= 80
 
 parseGenre :: Parser Genre
 parseGenre = do
-  g <- pByte
+  g <- anySingle
   guard (g <= 191) <?> "valid genre byte"
   return $ Genre g
 
