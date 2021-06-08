@@ -1,13 +1,7 @@
 {
     "cSpell.words": [
-        "Maybe",
-        "Protolude",
-        "Word",
-        "album",
-        "artist",
-        "genre",
-        "track",
-        "unofficial",
-        "year"
-    ]
+        "Monad",
+        "Monoid",
+    ],
+    "cSpell.language": "en,en-GB"
 }

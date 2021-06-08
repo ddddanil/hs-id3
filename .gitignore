@@ -31,4 +31,5 @@ cabal.project.local
 cabal.project.local~
 .HTF/
 .ghc.environment.*
-
+### Lock file
+stack.yaml.lock
