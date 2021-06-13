@@ -18,6 +18,7 @@ data ID3v1Tag
   deriving (Eq, Show, Generic)
 makePrisms ''ID3v1Tag
 
+-- TODO change to unlawful lens with conversions
 v1version :: Getter ID3v1Tag ID3v1Ver
 v1version = to getVer
   where
@@ -45,20 +46,8 @@ v10tag = lens getTag setTag
         & _ID3v12 . the @"v11tag" . the @"v10tag" .~ v10
         & _ID3v1E . the @"v11tag" . the @"v10tag" .~ v10
 
--- v11tag :: Lens' ID3v1Tag (Maybe ID3v11Tag)
--- v11tag = lens setTag getTag
---   where
---     getTag :: ID3v1Tag -> (Maybe ID3v11Tag)
---     getTag (ID3v10 _) = Nothing
---     getTag (ID3v11 tag) = Just tag
---     getTag (ID3v12 tag) = tag ^. the @"v11tag" . re _Just
---     getTag (ID3v1E tag) = tag ^. the @"v11tag" . re _Just
---     setTag :: ID3v1Tag -> ID3v11Tag -> ID3v1Tag
---     setTag (ID3v10)
---     setTag tag v11 = tag
---         & _ID3v11 .~ v11
---         & _ID3v12 . the @"v11tag" .~ v11
---         & _ID3v1E . the @"v11tag" .~ v11
+v11tag :: Traversal' ID3v1Tag ID3v11Tag
+v11tag = _ID3v11 `failing` _ID3v12 . the @"v11tag" `failing` _ID3v1E . the @"v11tag"
 
 title :: Lens' ID3v1Tag Text
 title = v10tag . the @"title"
@@ -78,4 +67,8 @@ year = v10tag . the @"year"
 genre :: Lens' ID3v1Tag Genre
 genre = v10tag . the @"genre"
 
+track :: Traversal' ID3v1Tag Word8
+track = v11tag . the @"track"
 
+subgenre :: Traversal' ID3v1Tag Text
+subgenre = _ID3v1E . the @"genre" `failing` _ID3v12 . the @"subgenre"

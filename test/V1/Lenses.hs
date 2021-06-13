@@ -14,4 +14,6 @@ checkv1Lenses = testProperties "v1 Lenses"
   , ("comment", isLens V1.comment)
   , ("year", isLens V1.year)
   , ("genre", isLens V1.genre)
+  , ("track", isTraversal V1.track)
+  , ("subgenre", isTraversal V1.subgenre)
   ]
