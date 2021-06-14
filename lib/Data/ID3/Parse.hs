@@ -14,6 +14,14 @@ data ParserOpts = ParserOpts
   deriving (Show, Generic)
 makeLenses ''ParserOpts
 
+data ParseResult a = ParseResult
+  { _contents :: ByteString
+  , _tag :: Maybe a
+  }
+  deriving (Eq, Show, Generic)
+makeLenses ''ParseResult
+makePrisms ''ParseResult
+
 type Parser = ParsecT Void ByteString (State ParserOpts) -- Add state
 
 runTagParser :: Parser a -> String -> ByteString -> Either (ParseErrorBundle ByteString Void) a

@@ -5,8 +5,10 @@ module V1.Suite
   )
   where
 
-import Control.Exception 
+import Control.Exception
+import Control.Lens
 import qualified Data.Text as T
+import qualified Data.ByteString as BS
 import qualified Data.List as L
 import qualified Data.ByteString.Lazy as LBS
 import qualified Codec.Archive.Tar as Tar
@@ -16,8 +18,8 @@ import System.IO (openBinaryFile)
 import qualified Path as P
 import Network.HTTP.Req
 
-import qualified Data.ID3.Tag
-import Data.ID3.IO (readv1File)
+import Data.ID3.V1.Tag
+import Data.ID3.Parse
 
 import Test.Tasty       (TestTree, testGroup)
 import Test.Tasty.HUnit (testCase, assertFailure)
@@ -35,12 +37,13 @@ testFile filename =
   Dir.withCurrentDirectory suitePath $ do
     let fail = "_F" `L.isInfixOf` filename
     file <- openBinaryFile filename ReadMode
-    tag <- readv1File filename file
-    case tag of
-      Just _tag -> do
-        writeFileText (filename ++ ".tag") . toText . (show :: Data.ID3.Tag.ID3v1 -> Text) $ _tag
+    contents <- BS.hGetContents file
+    case runTagParser_ parseID3v1 filename contents of
+      Just (ParseResult _ (Just t)) -> do
+        writeFileText (filename ++ ".tag") . show $ t
         when fail $ assertFailure "Correct tag"
-      Nothing -> unless fail $ assertFailure "Incorrect tag"
+      Just (ParseResult _ Nothing) -> unless fail $ assertFailure "Incorrect tag"
+      Nothing -> assertFailure "Parser error"
 
 -- List files
 
