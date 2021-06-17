@@ -11,6 +11,7 @@ import qualified Data.Text as T
 import qualified Data.ByteString as BS
 import qualified Data.List as L
 import qualified Data.ByteString.Lazy as LBS
+import Prettyprinter (pretty)
 import qualified Codec.Archive.Tar as Tar
 import qualified Codec.Compression.GZip as GZip
 import qualified System.Directory as Dir
@@ -40,7 +41,7 @@ testFile filename =
     contents <- BS.hGetContents file
     case runTagParser_ parseID3v1 filename contents of
       Just (ParseResult _ (Just t)) -> do
-        writeFileText (filename ++ ".tag") . show $ t
+        writeFileText (filename ++ ".tag") . show . pretty $ t
         when fail $ assertFailure "Correct tag"
       Just (ParseResult _ Nothing) -> unless fail $ assertFailure "Incorrect tag"
       Nothing -> assertFailure "Parser error"

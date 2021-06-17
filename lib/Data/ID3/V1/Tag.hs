@@ -7,6 +7,7 @@ import Text.Megaparsec as MP hiding (parse)
 import qualified Data.ByteString as BS
 import qualified Data.Text as T
 import Data.ByteString.Builder
+import Prettyprinter hiding ((<>))
 import Data.ID3.Parse
 import Data.ID3.Build
 import Data.ID3.ReadWrite
@@ -108,3 +109,13 @@ parseID3v1 = do
         & sequenceA
     ]
   return . (_ParseResult #) . fromMaybe (input, Nothing) $ (Just <<$>> x)
+
+prettyID3v1Tag :: ID3v1Tag -> Doc ann
+prettyID3v1Tag tag = tag ^. singular (
+    _ID3v10 . to pretty `failing`
+    _ID3v11 . to pretty `failing`
+    _ID3v12 . to pretty `failing`
+    _ID3v1E . to pretty)
+
+instance Pretty ID3v1Tag where
+  pretty = prettyID3v1Tag

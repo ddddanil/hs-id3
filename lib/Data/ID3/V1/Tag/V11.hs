@@ -8,6 +8,7 @@ import Data.Text.Encoding.Lens
 import Text.Megaparsec hiding (parse)
 import Text.Megaparsec.Byte.Lexer
 import Data.ByteString.Builder
+import Prettyprinter hiding ((<>))
 import Data.ID3.Parse
 import Data.ID3.Build
 import Data.ID3.ReadWrite
@@ -67,3 +68,20 @@ instance ReadWrite ID3v11Tag where
   parse = parseID3v11Tag
   write = writeID3v11Tag
 
+
+prettyID3v11Tag :: ID3v11Tag -> Doc ann
+prettyID3v11Tag tag =
+  pretty @Text "ID3 v1 Tag" <> line
+  <> (indent 4 . vsep $
+    [ (fill 8 . pretty @Text $ "Version:") <+> pretty @Text "1.1"
+    , (fill 8 . pretty @Text $ "Title:") <+> pretty (tag ^. the @"v10tag" . the @"title")
+    , (fill 8 . pretty @Text $ "Artist:") <+> pretty (tag ^. the @"v10tag" . the @"artist")
+    , (fill 8 . pretty @Text $ "Album:") <+> pretty (tag ^. the @"v10tag" . the @"album")
+    , (fill 8 . pretty @Text $ "Year:") <+> pretty (tag ^. the @"v10tag" . the @"year")
+    , (fill 8 . pretty @Text $ "Comment:") <+> pretty (tag ^. the @"v10tag" . the @"comment")
+    , (fill 8 . pretty @Text $ "Track:") <+> pretty (tag ^. the @"track")
+    , (fill 8 . pretty @Text $ "Genre:") <+> pretty (tag ^. the @"v10tag" . the @"genre")
+    ])
+
+instance Pretty ID3v11Tag where
+  pretty = prettyID3v11Tag

@@ -249,5 +249,5 @@ genreName (Genre x) = case x of
   _ -> error "Illegal genre"
 
 instance Pretty Genre where
-  pretty = pretty . genreName
+  pretty g@(Genre x) = (parens . pretty @Word8 $ x) <+> (pretty . genreName $ g)
     

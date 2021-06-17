@@ -3,10 +3,11 @@ module Data.ID3.V1.Tag.V10 (
 ) where
 
 import Control.Lens
-import Data.Generics.Product.Fields
+import Data.Generics.Product
 import Text.Megaparsec hiding (parse)
 import Text.Megaparsec.Byte.Lexer
 import Data.ByteString.Builder
+import Prettyprinter hiding ((<>))
 import Data.ID3.Parse
 import Data.ID3.Build
 import Data.ID3.ReadWrite
@@ -49,3 +50,19 @@ writeID3v10Tag tag =
 instance ReadWrite ID3v10Tag where
   parse = parseID3v10Tag
   write = writeID3v10Tag
+
+prettyID3v10Tag :: ID3v10Tag -> Doc ann
+prettyID3v10Tag tag =
+  pretty @Text "ID3 v1 Tag" <> line
+  <> (indent 4 . vsep $
+    [ (fill 8 . pretty @Text $ "Version:") <+> pretty @Text "1.0"
+    , (fill 8 . pretty @Text $ "Title:") <+> pretty (tag ^. the @"title")
+    , (fill 8 . pretty @Text $ "Artist:") <+> pretty (tag ^. the @"artist")
+    , (fill 8 . pretty @Text $ "Album:") <+> pretty (tag ^. the @"album")
+    , (fill 8 . pretty @Text $ "Year:") <+> pretty (tag ^. the @"year")
+    , (fill 8 . pretty @Text $ "Comment:") <+> pretty (tag ^. the @"comment")
+    , (fill 8 . pretty @Text $ "Genre:") <+> pretty (tag ^. the @"genre")
+    ])
+
+instance Pretty ID3v10Tag where
+  pretty = prettyID3v10Tag
