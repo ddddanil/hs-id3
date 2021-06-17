@@ -24,14 +24,6 @@ data ID3v2HeaderFlags
   | Footer
   deriving (Eq, Show, Enum, Generic)
 
-reverseBits :: Word8 -> Word8
-reverseBits x = fromIntegral x'
-   where
-      !x' = ((fromIntegral x * 0x0202020202 :: Word64) .&. 0x010884422010) `mod` 1023
-
-reversedBits :: Iso' Word8 Word8
-reversedBits = involuted reverseBits
-
 data ID3v2Header = ID3v2Header
   { _version :: !ID3v2Ver
   , _flags   :: !Word8
@@ -59,3 +51,5 @@ writev2Header h =
 instance ReadWrite ID3v2Header where
   parse = parsev2Header
   write = writev2Header
+
+

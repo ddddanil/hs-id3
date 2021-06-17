@@ -40,19 +40,7 @@ version :: Getter ID3v1Tag ID3Version
 version = v1version . re _ID3v1Version
 
 v10tag :: Lens' ID3v1Tag ID3v10Tag
-v10tag = lens getTag setTag
-  where
-    getTag :: ID3v1Tag -> ID3v10Tag
-    getTag (ID3v10 tag) = tag
-    getTag (ID3v11 tag) = tag ^. the @"v10tag"
-    getTag (ID3v12 tag) = tag ^. the @"v11tag" . the @"v10tag"
-    getTag (ID3v1E tag) = tag ^. the @"v11tag" . the @"v10tag"
-    setTag :: ID3v1Tag -> ID3v10Tag -> ID3v1Tag
-    setTag tag v10 = tag
-        & _ID3v10 .~ v10
-        & _ID3v11 . the @"v10tag" .~ v10
-        & _ID3v12 . the @"v11tag" . the @"v10tag" .~ v10
-        & _ID3v1E . the @"v11tag" . the @"v10tag" .~ v10
+v10tag = singular $ _ID3v10 `failing` v11tag . the @"v10tag"
 
 v11tag :: Traversal' ID3v1Tag ID3v11Tag
 v11tag = _ID3v11 `failing` _ID3v12 . the @"v11tag" `failing` _ID3v1E . the @"v11tag"
@@ -89,12 +77,12 @@ parseID3v1Tag = choice
   , parse @ID3v10Tag <&> (_ID3v10#)
   ]
 
--- writeID3v1Tag :: ID3v1Tag -> Builder
--- writeID3v1Tag tag = tag
---   & _ID3v10 %~ write
---   & _ID3v11 %~ write
---   & _ID3v12 %~ write
---   & _ID3v1E %~ write
+writeID3v1Tag :: ID3v1Tag -> Builder
+writeID3v1Tag tag = tag ^. singular (
+    _ID3v10 . to write `failing`
+    _ID3v11 . to write `failing`
+    _ID3v12 . to write `failing`
+    _ID3v1E . to write)
 
 splitAtEnd :: Int -> ByteString -> (ByteString, ByteString)
 splitAtEnd n s = BS.splitAt (BS.length s - n) s
@@ -107,16 +95,16 @@ parseID3v1 = do
   input <- getInput
   x <- optional . choice $
     [ splitAtEnd v1Elen input
-        <&> (\s -> withInput s (parse @ID3v1ETag) <&> (_ID3v1E#))
+        <&> (\s -> withInput s (parse @ID3v1ETag) <&> (ID3v1E))
         & sequenceA
     , splitAtEnd v12len input
-        <&> (\s -> withInput s (parse @ID3v12Tag) <&> (_ID3v12#))
+        <&> (\s -> withInput s (parse @ID3v12Tag) <&> (ID3v12))
         & sequenceA
     , splitAtEnd v10len input
-        <&> (\s -> withInput s (parse @ID3v11Tag) <&> (_ID3v11#))
+        <&> (\s -> withInput s (parse @ID3v11Tag) <&> (ID3v11))
         & sequenceA
     , splitAtEnd v10len input
-        <&> (\s -> withInput s (parse @ID3v10Tag) <&> (_ID3v10#))
+        <&> (\s -> withInput s (parse @ID3v10Tag) <&> (ID3v10))
         & sequenceA
     ]
   return . (_ParseResult #) . fromMaybe (input, Nothing) $ (Just <<$>> x)

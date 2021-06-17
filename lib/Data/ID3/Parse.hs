@@ -9,14 +9,14 @@ import Text.Megaparsec hiding (State)
 import Text.Megaparsec.Byte
 
 data ParserOpts = ParserOpts
-  { _encoding :: Encoding
+  { _encoding :: !Encoding
   }
-  deriving (Show, Generic)
+  deriving (Eq, Show, Generic)
 makeLenses ''ParserOpts
 
 data ParseResult a = ParseResult
-  { _contents :: ByteString
-  , _tag :: Maybe a
+  { _contents :: !ByteString
+  , _tag :: !(Maybe a)
   }
   deriving (Eq, Show, Generic)
 makeLenses ''ParseResult
@@ -25,7 +25,7 @@ makePrisms ''ParseResult
 type Parser = ParsecT Void ByteString (State ParserOpts) -- Add state
 
 runTagParser :: Parser a -> String -> ByteString -> Either (ParseErrorBundle ByteString Void) a
-runTagParser p n s = evalState (runParserT p n s) (ParserOpts Utf8)
+runTagParser p n s = evalState (runParserT p n s) (ParserOpts Latin1)
 
 runTagParser_ :: Parser a -> String -> ByteString -> Maybe a
 runTagParser_ p n = rightToMaybe . runTagParser p n
@@ -40,7 +40,7 @@ parseTextField size = do
   enc <- use encoding
   takeP (Just "character") size
       <&> BS.takeWhile (/= 0)
-      <&> decode Utf8
+      <&> decode Latin1
 
 withInput :: MonadParsec e s m => s -> m a -> m a
 withInput i m = do

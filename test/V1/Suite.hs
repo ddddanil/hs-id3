@@ -66,7 +66,9 @@ download = do
     responseBody <$> req
       GET (https "id3.org" /: "Developer Information")
       NoReqBody lbsResponse
-      (("action" :: Text) =: ("AttachFile" :: Text) <> ("do" :: Text) =: ("get" :: Text) <> ("target" :: Text) =: ("id3v1_test_suite.tar.gz" :: Text))
+      ( (=:) @_ @Text "action" "AttachFile"
+      <> (=:) @_ @Text "do" "get"
+      <> (=:) @_ @Text "target" "id3v1_test_suite.tar.gz")
 
 extractEntries :: Tar.Entries Tar.FormatError -> IO [Tar.Entry]
 extractEntries Tar.Done = return []
